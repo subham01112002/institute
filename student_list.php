@@ -10,9 +10,15 @@ $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' OR
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel = "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet"  href="student_list.css">
 </head>
 <body>
+<div class="form-box">
+  <h1><a href="home.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
+  <h1>Student List</h1>
+
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
@@ -49,6 +55,7 @@ $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' OR
   </tbody>
 </table>
 </div>
+        </div>
 <script>
     
 

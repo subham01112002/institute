@@ -6,8 +6,37 @@
     counter-reset: my-sec-counter;
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
+    background: rgb(238,174,202);
+  background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,178,233,1) 100%);
+  /*background: rgb(34,193,195);
+background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(231,241,230,1) 100%, rgba(224,239,229,1) 100%);*/
+  margin-top: 95px;
+  }
+  .form-box {
+    max-width: 800px;
+    
+    margin: auto;
+    padding: 50px;
+    background: #ffffff;
+    border: 10px solid #f2f2f2;
+    
+  
+  }
+  .form-group{
+    margin-bottom: 5px;
+    font-family:  sans-serif;
   }
   
+  h1  {
+    text-align: center;
+    font-family:Arial, Helvetica, sans-serif;
+  font:
+    2em "typewriter",
+    monospace;
+  align-self: center;
+    
+  
+  }
   #DataTable {
     position:relative;
     padding: 15px;
@@ -116,7 +145,6 @@
         position: relative !important;
         bottom: auto !important;
         right: auto !important;
-        display: block !important;
         width: 100%;
         list-style: none;
       } 
@@ -134,8 +162,10 @@
       }
         
       .box ul.pagination {
-        display: block;
-        margin: 0px;
+        list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0px;
         
       }
         
@@ -171,12 +201,22 @@
     position: absolute;
     bottom: -45px;
     right: 15px;
+    list-style: none;
+    display: flex;
+    gap: 15px;
   }
   
   .box .dvrecords {
     padding: 5px 0;
   }
+  .pagination>li>a {
+    text-decoration: none;
+    font-size: larger;
+}
   
   .box .dvrecords .records{
     margin-right: 5px;
+  }
+  a {
+    color: blueviolet;
   }
