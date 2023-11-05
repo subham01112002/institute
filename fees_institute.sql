@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2023 at 10:18 AM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 8.1.10
+-- Generation Time: Nov 05, 2023 at 01:01 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,29 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fees_history`
+--
+
+CREATE TABLE `fees_history` (
+  `fees_id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL,
+  `date` varchar(255) NOT NULL,
+  `month` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `fees_history`
+--
+
+INSERT INTO `fees_history` (`fees_id`, `student_id`, `subject_id`, `date`, `month`) VALUES
+(1, 30, 18, '2023-11-05', '2023-11'),
+(2, 28, 15, '2023-11-03', '2023-11'),
+(3, 28, 16, '2023-11-03', '2023-11');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `student_activity`
 --
 
@@ -38,7 +61,7 @@ CREATE TABLE `student_activity` (
   `Month` varchar(20) NOT NULL,
   `Teacher_id` int(50) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `student_activity`
@@ -86,7 +109,7 @@ CREATE TABLE `student_registration` (
   `Class` varchar(50) NOT NULL,
   `Date_of_birth` date NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `student_registration`
@@ -126,7 +149,7 @@ CREATE TABLE `subject_category` (
   `Category_id` int(11) NOT NULL,
   `Category_name` varchar(500) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_category`
@@ -149,7 +172,7 @@ CREATE TABLE `subject_group` (
   `Subject_group_name` varchar(255) NOT NULL,
   `Category_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_group`
@@ -176,7 +199,7 @@ CREATE TABLE `subject_master` (
   `Category_id` int(11) NOT NULL,
   `Subject_group_id` int(250) NOT NULL,
   `Status` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_master`
@@ -207,7 +230,7 @@ CREATE TABLE `teacher` (
   `Teacher_reg_id` varchar(255) NOT NULL,
   `Category_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `teacher`
@@ -241,7 +264,7 @@ CREATE TABLE `teacher_activity` (
   `Subject_group_id` int(11) NOT NULL,
   `Subject_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `teacher_activity`
@@ -262,6 +285,12 @@ INSERT INTO `teacher_activity` (`Teacher_activity_id`, `Teacher_id`, `Category_i
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `fees_history`
+--
+ALTER TABLE `fees_history`
+  ADD PRIMARY KEY (`fees_id`);
 
 --
 -- Indexes for table `student_activity`
@@ -312,6 +341,12 @@ ALTER TABLE `teacher_activity`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `fees_history`
+--
+ALTER TABLE `fees_history`
+  MODIFY `fees_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `student_activity`
