@@ -241,7 +241,7 @@
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="home.php"><i class="fa-solid fa-building-columns"></i></a></h1>
+  <h1><a href="index.php"><i class="fa-solid fa-building-columns"></i></a></h1>
   <h1>Student Activity Form</h1>
   
   <form action="" name="paymentform" id="paymentform" method="post" onSubmit="return checking();">

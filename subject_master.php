@@ -90,7 +90,7 @@
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="home.php"><i class="fa-solid fa-building-columns"></i></a></h1>
+  <h1><a href="index.php"><i class="fa-solid fa-building-columns"></i></a></h1>
   <h1>Subject Form</h1>
   <form action="" name="subjectform" id="subjectform" method="post" onSubmit="return checking();">
   <input type="hidden" name="mode" value="1" />

@@ -143,7 +143,7 @@ if(mysqli_connect_errno()){
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="home.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
+  <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>Student Registration Form</h1>
   
   <form action="" name="subjectform" id="subjectform" method="post" onSubmit="return checking();">

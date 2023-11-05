@@ -16,7 +16,7 @@ $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' OR
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="home.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
+  <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>Student List</h1>
 
 <div id="DataTable">
