@@ -58,7 +58,7 @@
         <a class="nav-link" href="home.php">Student Registration</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="student_activity.php">Student activity</a>
+        <a class="nav-link" href="fees_history.php">Fees History</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="teacher.php">Teacher Registration</a>

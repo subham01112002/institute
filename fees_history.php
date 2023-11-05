@@ -1,6 +1,13 @@
 <?php 
 include("conn.php");
-$sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' ORDER BY `Student_id` DESC");
+
+if(empty($_REQUEST['month'])){
+    $curr_month=date("m");
+}
+else{
+    $curr_month=$_REQUEST['month'];
+}
+$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` GROUP BY `student_activity`.`Student_id`");
 
 
 ?>
@@ -17,8 +24,24 @@ $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' OR
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Student List</h1>
+  <h1>Fees History</h1>
+<div style="display:flex;justify-content:end">
+<select onchange="month(this.value)">
+<option value="01" <?php if($curr_month=="1") echo "selected"; ?>>January</option>
+<option value="02" <?php if($curr_month=="2") echo "selected"; ?>>February</option>
+<option value="03" <?php if($curr_month=="3") echo "selected"; ?>>March</option>
+<option value="04" <?php if($curr_month=="4") echo "selected"; ?>>April</option>
+<option value="05" <?php if($curr_month=="5") echo "selected"; ?>>May</option>
+<option value="06" <?php if($curr_month=="6") echo "selected"; ?>>June</option>
+<option value="07" <?php if($curr_month=="7") echo "selected"; ?>>July</option>
+<option value="08" <?php if($curr_month=="8") echo "selected"; ?>>August</option>
+<option value="09" <?php if($curr_month=="9") echo "selected"; ?>>September</option>
+<option value="10" <?php if($curr_month=="10") echo "selected"; ?>>October</option>
+<option value="11" <?php if($curr_month=="11") echo "selected"; ?>>November</option>
+<option value="12" <?php if($curr_month=="12") echo "selected"; ?>>December</option>
 
+</select>
+</div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
@@ -26,38 +49,126 @@ $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' OR
         <tr>
           <th>Name</th>
           <th>Registration ID</th>
-          <th>Phone No.</th>
-          <th>Class</th>
-          <th>Address</th>
-          <th>Email</th>
-          <th>Gender</th>
-          <th>Date of Joining</th>
+          <th>Subjects</th>
+          <th>Fees</th>
+          <th>Total Fees</th>
+          <th>Paid Amount</th>
+          <th>Paid Date</th>
+          <th>Status</th>
           <th>Actions</th>
           
         </tr>
     </thead>
     <tbody class="scroll-pane">
         
-        <?php  while($arr=mysqli_fetch_array($sql)){?> 
+        <?php $i=0;  while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
-        <td><?php echo $arr['Student_name'] ?></td>
+            <?php
+            $paid=0;
+            $id=$arr['id'];
+            $query=mysqli_query($conn,"SELECT * FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '%$curr_month'");
+            $lat_date=mysqli_fetch_array(mysqli_query($conn,"SELECT MAX(date) AS 'date' FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '%$curr_month'"));
+            if($lat_date)
+            {
+                $lat_date=$lat_date['date'];
+            }
+            
+            $arr_it=array();
+            while($fees=mysqli_fetch_array($query))
+            {
+                array_push($arr_it,$fees['subject_id']);
+            }
+            ?>
+        <td  id="id-<?php echo $i ?>" data-id="<?php echo $arr['id']; ?>"><?php echo $arr['Student_name'] ?></td>
         <td><?php echo $arr['Student_reg_no'] ?></td>
-        <td><?php echo $arr['Phone_no'] ?></td>
-        <td><?php echo $arr['Class'] ?></td>
-        <td><?php echo $arr['Address'] ?></td>
-        <td><?php echo $arr['Email'] ?></td>
-        <td><?php echo $arr['Gender'] ?></td>
-        <td><?php echo $arr['Joining_date'] ?></td>
-        <td><a href="student_edit.php?stud=<?php echo $arr['Student_id'] ?>">Edit</a> | <a href="student_del.php?stud=<?php echo $arr['Student_id'] ?>">Delete</td>
+        <?php 
+        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
+        ?>
+        
+        <td>
+            <?php while($sub=mysqli_fetch_array($subject)){  
+                echo $sub['Subject_name']."<br/>";
+                }?>
+                
+                
+        </td>
+        <td><?php
+        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
+         ?>
+         <input type="checkbox" class="fees_all-<?php echo $i ?>" onclick="select_all(<?php echo $i ?>)" value="<?php echo $arr['Fees'] ?>"> Select All <br> 
+        <?php
+        while($sub2=mysqli_fetch_array($subject)){ ?>  
+              <input type="checkbox" class="fees-<?php echo $i ?>"  data-sub='<?php echo $sub2['Subject_id'] ?>' value="<?php echo $sub2['Actual_fees'] ?>" onclick="fees(this,<?php echo $i ?>)" <?php if(in_array($sub2['Subject_id'] ,$arr_it)) { echo "checked"; $paid+=$sub2['Actual_fees']; } ?> > <?php echo  $sub2['Actual_fees']; ?><br/>
+             <?php   }?>
+                </td>
+        <td><?php echo $arr['Fees'] ?></td>
+        <td id="paid-<?php  echo $i  ?>"><?php echo $paid; ?></td>
+        <td><input type="date" class="date-<?php echo $i ?>" <?php if($lat_date){ ?> value="<?php echo $lat_date ?>" <?php } ?>></td>
+        <td><?php echo  $paid==0 ?  "unpaid" : ($paid<$arr['Fees'] ?  "Partially Paid" :  "Paid"); ?></td>
+        <td><input type="button" value="Submit" onclick="submit(<?php echo $i ?>)"></td>
         </tr>
-        <?php } ?>
+        <?php $i++; } ?>
         
   </tbody>
 </table>
 </div>
         </div>
+        <script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+  crossorigin="anonymous"></script>
 <script>
-    
+    function submit(num)
+    {
+        var paid=document.getElementById('paid-'+num).innerHTML;
+        if(paid==="" || paid==="0" )
+        {
+            alert("Select Subjects");
+            return;
+        }
+        var date=document.getElementsByClassName('date-'+num)[0].value;
+        if(date===""){
+        alert("Select Date");
+        return;
+        }
+        var subj=document.getElementsByClassName('fees-'+num);
+        let str="";
+        for(let i of subj)
+        {
+            if(i.checked)
+            str+=i.dataset.sub+",";
+        }
+        str=str.substring(0,str.length-1);
+        var id=document.getElementById('id-'+num).dataset.id;
+        window.location.href="fees_sub.php?sub="+str+"&date="+date+"&id="+id;
+
+    }
+    function month(val){
+        window.location.href="fees_history.php?month="+val;
+    }
+
+    function select_all(num) { 
+        if(document.getElementsByClassName('fees_all-'+num)[0].checked===true)
+        for(let i of document.getElementsByClassName('fees-'+num))
+        {
+            i.checked=true;
+        }
+        else
+        for(let i of document.getElementsByClassName('fees-'+num))
+        {
+            i.checked=false;
+        }
+        
+        fees(document.getElementsByClassName('fees_all-'+num)[0],num);
+     }  
+     function fees(ele,cls)
+     {
+        if(ele.checked===true)
+        document.getElementById('paid-'+cls).innerHTML=document.getElementById('paid-'+cls).innerHTML !=="" ? Number(document.getElementById('paid-'+cls).innerHTML)+Number(ele.value) : ele.value;
+        else
+        document.getElementById('paid-'+cls).innerHTML=Number(document.getElementById('paid-'+cls).innerHTML)-Number(ele.value);
+        
+     }
 
 
     var box = paginator({
