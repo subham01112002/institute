@@ -1,123 +1,396 @@
-<?php 
+<?php
 include("conn.php");
+$req=" SELECT * FROM  `subject_category` ORDER BY `Category_id`";
+    $qut=mysqli_query($conn,$req);
 
-if(empty($_REQUEST['month'])){
-    $curr_month=date("m");
-    $curr_year=date("Y");
-}
-else{
-    $curr_month=$_REQUEST['month'];
-    $curr_year=$_REQUEST['year'];
-}
-$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` GROUP BY `student_activity`.`Student_id`");
-
-
+    $rem=" SELECT * FROM  `subject_group`  ORDER BY `Subject_group_id`";
+    $que=mysqli_query($conn,$rem);
+    
+    $ren=" SELECT * FROM  `subject_master`  ORDER BY `Subject_id`";
+    $quy=mysqli_query($conn,$ren);
+    if(!empty($_REQUEST['mode']))
+    {
+        $res_category_id=$_REQUEST['Category_id'];
+        $res_grp_id=$_REQUEST['Subject_group_id'];
+        $res_sub_id=$_REQUEST['Subject_id'];
+        
+        $sql=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `student_registration` ON  student_registration.`Student_id`=student_activity.`Student_id` WHERE `Category_id`='$res_category_id' AND Subject_group_id='$res_grp_id' AND Subject_id='$res_sub_id'");
+        
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel = "stylesheet" href="student_act.css" >
     <link rel = "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+    <style>
+        /*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
 
-    <link rel="stylesheet"  href="student_list.css">
+  body {
+    counter-reset: my-sec-counter;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    background: rgb(238,174,202);
+  background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,178,233,1) 100%);
+  /*background: rgb(34,193,195);
+background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(231,241,230,1) 100%, rgba(224,239,229,1) 100%);*/
+  margin-top: 95px;
+  }
+  .form-box {
+    max-width: 800px;
+    
+    margin: auto;
+    padding: 50px;
+    background: #ffffff;
+    border: 10px solid #f2f2f2;
+    
+  
+  }
+  .form-group{
+    margin-bottom: 5px;
+    font-family:  sans-serif;
+  }
+  
+  h1  {
+    text-align: center;
+    font-family:Arial, Helvetica, sans-serif;
+  font:
+    2em "typewriter",
+    monospace;
+  align-self: center;
+    
+  
+  }
+  #DataTable {
+    position:relative;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+  
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+  }
+  
+  th { 
+    background: #333; 
+    color: white; 
+    font-weight: bold; 
+    cursor: cell;
+  }
+  td, th { 
+    padding: 6px; 
+    border: 1px solid #ccc; 
+    text-align: left; 
+    box-sizing: border-box;
+  }
+  
+  tr:nth-of-type(odd) { 
+    background: #eee; 
+  }
+  
+    @media
+      only screen 
+      and (max-width: 760px), (min-device-width: 768px) 
+      and (max-device-width: 1024px)  {
+  
+        table {
+          margin-top: 106px;
+        }
+      /* Force table to not be like tables anymore */
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+  
+      /* Hide table headers (but not display: none;, for accessibility) */
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+  
+      tr {
+        margin: 0 0 1rem 0;
+        overflow: auto;
+        border-bottom: 1px solid #ccc;
+      }
+        
+        
+        
+        tbody tr:before {
+          counter-increment: my-sec-counter;
+          content: "";
+          background-color:#333;
+          display: block;
+          height: 1px;
+        }
+  
+        
+      tr:nth-child(odd) {
+        background: #ccc;
+      }
+      
+      td {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        margin-right: 0%;
+        display: block;
+        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+        box-sizing:border-box;
+      }
+  
+      td:before {
+        /* Top/left values mimic padding */
+        font-weight: bold;
+        width: 50%;
+        float:left;
+        box-sizing:border-box;
+        padding-left: 5px;
+      }
+  
+      /*
+      Label the data
+      You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+      */
+      td:nth-of-type(1):before { content: "First Name"; }
+      td:nth-of-type(2):before { content: "Last Name"; }
+      td:nth-of-type(3):before { content: "Job Title"; }
+      td:nth-of-type(4):before { content: "Favorite Color"; }
+      td:nth-of-type(5):before { content: "Wars of Trek?"; }
+      td:nth-of-type(6):before { content: "Secret Alias"; }
+      td:nth-of-type(7):before { content: "Date of Birth"; }
+      td:nth-of-type(8):before { content: "Dream Vacation City"; }
+      td:nth-of-type(9):before { content: "GPA"; }
+      td:nth-of-type(10):before { content: "Arbitrary Data"; }
+      
+      .box ul.pagination {
+        position: relative !important;
+        bottom: auto !important;
+        right: auto !important;
+        width: 100%;
+        list-style: none;
+      } 
+        
+      .box {
+        text-align: center;
+        position: fixed;
+        width: 100%;
+        background-color: #fff;
+        top: 0px;
+        left:0px;
+        padding: 15px;
+        box-sizing: border-box;
+        border-bottom: 1px solid #ccc;
+      }
+        
+      .box ul.pagination {
+        list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0px;
+        
+      }
+        
+       .box .dvrecords {
+        display: block;
+         margin-bottom: 10px;
+      }
+      .pagination>li {
+          display: inline-block;
+      }
+    }
+  
+  .top-filters {
+    font-size: 0px;
+  }
+  
+  .search-field {
+    text-align: right;
+    margin-bottom: 5px;
+  }
+  
+  .dd-number-of-recoeds {
+    font-size: 12px;
+  }
+  
+  .search-field,
+  .dd-number-of-recoeds {
+    display: inline-block;
+    width: 50%;
+  }
+  
+  .box ul.pagination {
+    position: absolute;
+    bottom: -45px;
+    right: 15px;
+    list-style: none;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .box .dvrecords {
+    padding: 5px 0;
+  }
+  .pagination>li>a {
+    text-decoration: none;
+    font-size: larger;
+}
+  
+  .box .dvrecords .records{
+    margin-right: 5px;
+  }
+  a {
+    color: blueviolet;
+  }
+    </style>
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Fees History</h1>
-<div style="display:flex;justify-content:end;gap:10px">
-<select id="month" onchange="month(this.value)">
-<option value="01" <?php if($curr_month=="1") echo "selected"; ?>>January</option>
-<option value="02" <?php if($curr_month=="2") echo "selected"; ?>>February</option>
-<option value="03" <?php if($curr_month=="3") echo "selected"; ?>>March</option>
-<option value="04" <?php if($curr_month=="4") echo "selected"; ?>>April</option>
-<option value="05" <?php if($curr_month=="5") echo "selected"; ?>>May</option>
-<option value="06" <?php if($curr_month=="6") echo "selected"; ?>>June</option>
-<option value="07" <?php if($curr_month=="7") echo "selected"; ?>>July</option>
-<option value="08" <?php if($curr_month=="8") echo "selected"; ?>>August</option>
-<option value="09" <?php if($curr_month=="9") echo "selected"; ?>>September</option>
-<option value="10" <?php if($curr_month=="10") echo "selected"; ?>>October</option>
-<option value="11" <?php if($curr_month=="11") echo "selected"; ?>>November</option>
-<option value="12" <?php if($curr_month=="12") echo "selected"; ?>>December</option>
-
-</select>
-<select id="year" onchange="year(this.value)">
-   
-<?php for($i=date("Y");$i>=2010;$i--){ ?>
+  <h1><a href="index.php"><i class="fa-solid fa-building-columns"></i></a></h1>
+  <h1>Student Activity Form</h1>
+  
+  <form action="" name="paymentform" id="paymentform" method="post" onSubmit="return checking();">
+    <input type="hidden" name="mode" value="1" />
     
-    <option value="<?php echo $i; ?>" <?php if($curr_year==$i) echo "selected" ?>><?php echo $i; ?></option>
-    <?php } ?>
-   
-</select>
-</div>
-<div id="DataTable">
+    <div class="form-group">
+      <label for="categoryid">Category Name</label>
+      <select class="form-control" name="Category_id" id="Category_id" onchange="subject_groupchk(this.value)" >
+									<option value=""> Select Your Category</option>
+									<?php while($c=mysqli_fetch_array($qut)){ ?>
+									<option value="<?php echo $c['Category_id'] ?>"
+                                    <?php if(isset($res_category_id) && $res_category_id==$c['Category_id']) echo "selected" ?>><?php echo $c['Category_name'] ?></option>
+                  <?php } ?>
+	    </select>
+    </div>
+    <div class="form-group">
+      <label for="categoryid">Subject Group Name</label>
+      <select class="form-control" name="Subject_group_id" id="Subject_group_id" onchange="subject_chk(this.value)"  >
+									<option value=""> Select Your subject group</option>
+									<?php  while($c=mysqli_fetch_array($que)){ ?>
+                  <option value="<?php echo $c['Subject_group_id'] ?>" data-value="<?php echo $c['Category_id'] ?>" data-subb="<?php echo $c['Subject_group_name'] ?>"><?php echo $c['Subject_group_name'] ?></option>
+                  <?php } ?>
+	    </select>
+    </div>
+    <div class="form-group">
+      <label for="subjectid">Subject Name</label>
+      <select class="form-control" name="Subject_id" id="Subject_id" onchange="teacher_chk(this.value)">
+									<option value=""> Select your subject</option>
+									<?php  while($b=mysqli_fetch_array($quy)){ ?>
+									<option value="<?php echo $b['Subject_id'] ?>" data-value="<?php echo $b['Subject_group_id'] ?>" data-sub="<?php echo $b['Subject_name'] ?>" <?php if($res_sub_id==$b['Subject_id']) echo "selected" ?>><?php echo $b['Subject_name'] ?></option>
+                  <?php } ?>
+	    </select>
+    </div>
+    <div class="but">
+        <input class="btn btn-primary" type="submit" value="Submit" /><br>
+    </div>
+    
+  </form>
+<script>
+    const elem=document.getElementById('Subject_group_id').cloneNode(true);
+  const ogg=elem.options;
+  console.log(ogg);
+  document.getElementById('Subject_group_id').innerHTML='<option value=""> Please Select a Category</option>';
+  function subject_groupchk(vall){
+    document.getElementById('Subject_group_id').innerHTML='<option value=""> Please Select a Subject Group</option>';
+  
+    for(let j of ogg)
+    {
+      if(j.dataset)
+      console.log(j.dataset.value)
+       if(j.dataset.value===vall)
+      document.getElementById('Subject_group_id').innerHTML+=`<option value="${j.value}"> ${j.dataset.subb}</option>`; 
+    }
+  }
+  <?php 
+  if(isset($res_grp_id))
+  { ?>
+  function subject_groupchk(vall,vall2){
+    document.getElementById('Subject_group_id').innerHTML='<option value=""> Please Select a Subject 2 Group</option>';
+  
+    for(let j of ogg)
+    {
+    if(j.dataset.value==vall && j.value==vall2)
+    {
+        document.getElementById('Subject_group_id').innerHTML+=`<option value="${j.value}" selected> ${j.dataset.subb}</option>`; 
+      
+    }
+       else  if(j.dataset.value==vall){
+      document.getElementById('Subject_group_id').innerHTML+=`<option value="${j.value}"> ${j.dataset.subb}</option>`; 
+    
+    }
+    }
+  }
+    subject_groupchk(<?php echo $res_category_id ?>,<?php echo $res_grp_id ?>);
+  <?php } ?>
+  
+  const ele=document.getElementById('Subject_id').cloneNode(true);
+  const og=ele.options;
+  console.log(og);
+  document.getElementById('Subject_id').innerHTML='<option value=""> Please Select a Subject Group</option>';
+  function subject_chk(val){
+    document.getElementById('Subject_id').innerHTML='<option value=""> Please Select a Subject</option>';
+    
+    for(let i of og)
+    {
+       if(i.dataset.value===val)
+      document.getElementById('Subject_id').innerHTML+=`<option value="${i.value}"> ${i.dataset.sub}</option>`; 
+    }
+  
+}
+<?php 
+  if(isset($res_grp_id))
+  { ?>
+   function subject_chk(vall,vall2){
+    document.getElementById('Subject_id').innerHTML='<option value=""> Please Select a Subject</option>';
+    
+    for(let i of og)
+    {
+        if(i.dataset.value==vall && i.value==vall2)
+    {
+        document.getElementById('Subject_id').innerHTML+=`<option value="${i.value}" selected> ${i.dataset.sub}</option>`; 
+    }
+      
+      
+        else if(i.dataset.value==vall)
+      document.getElementById('Subject_id').innerHTML+=`<option value="${i.value}"> ${i.dataset.sub}</option>`; 
+    }
+  
+}
+    subject_chk(<?php echo $res_grp_id ?>,<?php echo $res_sub_id ?>);
+  <?php } ?>
+  
+</script>
+<?php if(isset($sql)){ ?>
+    <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
     <thead>
         <tr>
           <th>Name</th>
           <th>Registration ID</th>
-          <th>Subjects</th>
+          <th>Class</th>
           <th>Fees</th>
-          <th>Total Fees</th>
-          <th>Paid Amount</th>
-          <th>Paid Date</th>
-          <th>Status</th>
           <th>Actions</th>
           
         </tr>
     </thead>
     <tbody class="scroll-pane">
         
-        <?php $i=0;  while($arr=mysqli_fetch_array($sql)){?> 
+        <?php  while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
-            <?php
-            $paid=0;
-            $id=$arr['id'];
-            $query=mysqli_query($conn,"SELECT * FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'");
-            $lat_date=mysqli_fetch_array(mysqli_query($conn,"SELECT MAX(date) AS 'date' FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'"));
-            if($lat_date)
-            {
-                $lat_date=$lat_date['date'];
-            }
-            
-            $arr_it=array();
-            while($fees=mysqli_fetch_array($query))
-            {
-                array_push($arr_it,$fees['subject_id']);
-            }
-            ?>
-        <td  id="id-<?php echo $i ?>" data-id="<?php echo $arr['id']; ?>"><a href='fees_details.php?id=<?php echo $arr['id']; ?>' style="text-decoration:none;color:black"><?php echo $arr['Student_name'] ?></a></td>
+        <td><?php echo $arr['Student_name'] ?></td>
         <td><?php echo $arr['Student_reg_no'] ?></td>
-        <?php 
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
-        ?>
-        
-        <td>
-            <?php while($sub=mysqli_fetch_array($subject)){  
-                echo $sub['Subject_name']."<br/>";
-                }?>
-                
-                
-        </td>
-        <td><?php
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
-         ?>
-         <input type="checkbox" class="fees_all-<?php echo $i ?>" onclick="select_all(<?php echo $i ?>)" value="<?php echo $arr['Fees'] ?>"> Select All <br> 
-        <?php
-        while($sub2=mysqli_fetch_array($subject)){ ?>  
-              <input type="checkbox" class="fees-<?php echo $i ?>"  data-sub='<?php echo $sub2['Subject_id'] ?>' value="<?php echo $sub2['Actual_fees'] ?>" onclick="fees(this,<?php echo $i ?>)" <?php if(in_array($sub2['Subject_id'] ,$arr_it)) { echo "checked disabled"; $paid+=$sub2['Actual_fees']; } ?> > <?php echo  $sub2['Actual_fees']; ?><br/>
-             <?php   }?>
-                </td>
-        <td><?php echo $arr['Fees'] ?></td>
-        <td id="paid-<?php  echo $i  ?>"><?php echo $paid; ?></td>
-        <td><input type="date" class="date-<?php echo $i ?>" <?php if($lat_date){ ?> value="<?php echo $lat_date ?>" <?php } ?>></td>
-        <td><?php echo  $paid==0 ?  "unpaid" : ($paid<$arr['Fees'] ?  "Partially Paid" :  "Paid"); ?></td>
-        <td><input type="button" value="Submit" onclick="submit(<?php echo $i ?>)"></td>
-        </tr>
-        <?php $i++; } ?>
+        <td><?php echo $arr['Class'] ?></td>
+        <td><?php echo $arr['Actual_fees'] ?></td>
+        <td><a href="student_fees_edit.php?stud=<?php echo $arr['Student_id'] ?>&sub=<?php echo $res_sub_id ?>">Change</a>
+        <?php } ?>
         
   </tbody>
 </table>
@@ -127,73 +400,9 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
+
 <script>
-    function submit(num)
-    {
-        var paid=document.getElementById('paid-'+num).innerHTML;
-        if(paid==="" || paid==="0" )
-        {
-            alert("Select Subjects");
-            return;
-        }
-        var date=document.getElementsByClassName('date-'+num)[0].value;
-        if(date===""){
-        alert("Select Date");
-        return;
-        }
-        var subj=document.getElementsByClassName('fees-'+num);
-        let str="";
-        for(let i of subj)
-        {
-            if(i.checked)
-            str+=i.dataset.sub+",";
-        }
-        str=str.substring(0,str.length-1);
-        var id=document.getElementById('id-'+num).dataset.id;
-        window.location.href="fees_sub.php?sub="+str+"&date="+date+"&id="+id+"&paid="+paid;
-
-    }
-    function month(val){
-
-        window.location.href="fees_history.php?month="+val+"&year="+document.getElementById('year').value;
-    }
-    function year(val){
-
-    window.location.href="fees_history.php?month="+document.getElementById('month').value+"&year="+val;
-    }
-    function select_all(num) { 
-        var sum=0;
-        if(document.getElementsByClassName('fees_all-'+num)[0].checked===true)
-        for(let i of document.getElementsByClassName('fees-'+num))
-        {
-            if(!i.disabled){
-            i.checked=true;
-            sum+=i.value;
-        }
-        document.getElementsByClassName('fees_all-'+num)[0].value=sum;
-        fees(document.getElementsByClassName('fees_all-'+num)[0],num);
-     
-        }
-        else
-        for(let i of document.getElementsByClassName('fees-'+num))
-        {
-            if(!i.disabled){
-            i.checked=false;
-            sum-=i.value;
-        }
-        document.getElementById('paid-'+num).innerHTML=Number(document.getElementById('paid-'+num).innerHTML)+sum;
     
-    }
-    
-        }  
-     function fees(ele,cls)
-     {
-        if(ele.checked===true && ele.disabled===false)
-        document.getElementById('paid-'+cls).innerHTML=document.getElementById('paid-'+cls).innerHTML !=="" ? Number(document.getElementById('paid-'+cls).innerHTML)+Number(ele.value) : ele.value;
-        if(ele.checked===false && ele.disabled===false)
-        document.getElementById('paid-'+cls).innerHTML=Number(document.getElementById('paid-'+cls).innerHTML)-Number(ele.value);
-        
-     }
 
 
     var box = paginator({
@@ -578,5 +787,6 @@ jQuery.fn.sortElements = (function(){
 
 
 </script>
+<?php } ?>
 </body>
 </html>

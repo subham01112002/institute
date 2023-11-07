@@ -39,9 +39,7 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
-      </li>
+      
       <li class="nav-item">
         <a class="nav-link" href="subject_category.php">Category</a>
       </li>
@@ -61,10 +59,10 @@
         <a class="nav-link" href="fees_history.php">Fees History</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="teacher.php">Teacher Registration</a>
+        <a class="nav-link" href="fees_update.php">Fees Update</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="teacher_activity.php">Teacher activity</a>
+        <a class="nav-link" href="teacher.php">Teacher Registration</a>
       </li>
     </ul>
     

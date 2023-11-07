@@ -8,6 +8,11 @@
      {
       @header("Location: teacher.php");  
      } 
+     if(!isset($_SESSION['cid']))
+     {
+      @header("Location: index.php");  
+     } 
+     
 
      $Id = $_SESSION['id'];  
      $name = $_SESSION['name'];

@@ -161,6 +161,9 @@ include("conn.php");
       <input class="form-control"  id="Date_of_birth" value="<?php echo $data['Date_of_birth']?>" type="date" name="Date_of_birth">
     </div>
     <div class="but">
+      <input class="btn btn-primary" type="button" value="Add Subject" onclick="window.location.href='student_add_sub.php?id=<?php echo $id ?>'" />
+    </div>
+    <div class="but">
       <input class="btn btn-primary" type="submit" value="Submit" />
     </div>
     

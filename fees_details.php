@@ -1,16 +1,14 @@
 <?php 
 include("conn.php");
 
-if(empty($_REQUEST['month'])){
-    $curr_month=date("m");
-    $curr_year=date("Y");
+if(empty($_REQUEST['id'])){
+    @header("Location: fees_history.php");
 }
-else{
-    $curr_month=$_REQUEST['month'];
-    $curr_year=$_REQUEST['year'];
-}
-$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` GROUP BY `student_activity`.`Student_id`");
+$id=$_REQUEST['id'];
+$sql=mysqli_query($conn,"SELECT `Subject_name`,`Actual_Fees`,`fees_history`.`month`,date FROM `fees_history` INNER JOIN `student_activity` ON `fees_history`.`student_id`=`student_activity`.`Student_id` INNER JOIN `subject_master` ON `subject_master`.`Subject_id`=`fees_history`.`subject_id` WHERE `fees_history`.`student_id`='30' ORDER BY `month` DESC;");
 
+$sql_name=mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `student_registration`  WHERE `Student_id`='$id' "));
+$name=$sql_name['Student_name'];
 
 ?>
 <!DOCTYPE html>
@@ -25,99 +23,33 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Fees History</h1>
-<div style="display:flex;justify-content:end;gap:10px">
-<select id="month" onchange="month(this.value)">
-<option value="01" <?php if($curr_month=="1") echo "selected"; ?>>January</option>
-<option value="02" <?php if($curr_month=="2") echo "selected"; ?>>February</option>
-<option value="03" <?php if($curr_month=="3") echo "selected"; ?>>March</option>
-<option value="04" <?php if($curr_month=="4") echo "selected"; ?>>April</option>
-<option value="05" <?php if($curr_month=="5") echo "selected"; ?>>May</option>
-<option value="06" <?php if($curr_month=="6") echo "selected"; ?>>June</option>
-<option value="07" <?php if($curr_month=="7") echo "selected"; ?>>July</option>
-<option value="08" <?php if($curr_month=="8") echo "selected"; ?>>August</option>
-<option value="09" <?php if($curr_month=="9") echo "selected"; ?>>September</option>
-<option value="10" <?php if($curr_month=="10") echo "selected"; ?>>October</option>
-<option value="11" <?php if($curr_month=="11") echo "selected"; ?>>November</option>
-<option value="12" <?php if($curr_month=="12") echo "selected"; ?>>December</option>
+  <h1><a href="fees_history.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
+  <h1>Payment History - <?php echo $name; ?></h1>
 
-</select>
-<select id="year" onchange="year(this.value)">
-   
-<?php for($i=date("Y");$i>=2010;$i--){ ?>
-    
-    <option value="<?php echo $i; ?>" <?php if($curr_year==$i) echo "selected" ?>><?php echo $i; ?></option>
-    <?php } ?>
-   
-</select>
-</div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
     <thead>
         <tr>
-          <th>Name</th>
-          <th>Registration ID</th>
-          <th>Subjects</th>
+          <th>Subject</th>
           <th>Fees</th>
-          <th>Total Fees</th>
-          <th>Paid Amount</th>
+          <th>Month</th>
           <th>Paid Date</th>
-          <th>Status</th>
-          <th>Actions</th>
           
         </tr>
     </thead>
     <tbody class="scroll-pane">
         
-        <?php $i=0;  while($arr=mysqli_fetch_array($sql)){?> 
+        <?php  while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
-            <?php
-            $paid=0;
-            $id=$arr['id'];
-            $query=mysqli_query($conn,"SELECT * FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'");
-            $lat_date=mysqli_fetch_array(mysqli_query($conn,"SELECT MAX(date) AS 'date' FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'"));
-            if($lat_date)
-            {
-                $lat_date=$lat_date['date'];
-            }
+            <td><?php echo $arr['Subject_name']; ?></td>
+            <td><?php echo $arr['Actual_Fees']; ?></td>
+            <td><input type="month" value="<?php echo $arr['month']; ?>" disabled></td>
+            <td><input type="date" value="<?php echo $arr['date']; ?>" disabled></td>
             
-            $arr_it=array();
-            while($fees=mysqli_fetch_array($query))
-            {
-                array_push($arr_it,$fees['subject_id']);
-            }
-            ?>
-        <td  id="id-<?php echo $i ?>" data-id="<?php echo $arr['id']; ?>"><a href='fees_details.php?id=<?php echo $arr['id']; ?>' style="text-decoration:none;color:black"><?php echo $arr['Student_name'] ?></a></td>
-        <td><?php echo $arr['Student_reg_no'] ?></td>
-        <?php 
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
-        ?>
-        
-        <td>
-            <?php while($sub=mysqli_fetch_array($subject)){  
-                echo $sub['Subject_name']."<br/>";
-                }?>
-                
-                
-        </td>
-        <td><?php
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
-         ?>
-         <input type="checkbox" class="fees_all-<?php echo $i ?>" onclick="select_all(<?php echo $i ?>)" value="<?php echo $arr['Fees'] ?>"> Select All <br> 
-        <?php
-        while($sub2=mysqli_fetch_array($subject)){ ?>  
-              <input type="checkbox" class="fees-<?php echo $i ?>"  data-sub='<?php echo $sub2['Subject_id'] ?>' value="<?php echo $sub2['Actual_fees'] ?>" onclick="fees(this,<?php echo $i ?>)" <?php if(in_array($sub2['Subject_id'] ,$arr_it)) { echo "checked disabled"; $paid+=$sub2['Actual_fees']; } ?> > <?php echo  $sub2['Actual_fees']; ?><br/>
-             <?php   }?>
-                </td>
-        <td><?php echo $arr['Fees'] ?></td>
-        <td id="paid-<?php  echo $i  ?>"><?php echo $paid; ?></td>
-        <td><input type="date" class="date-<?php echo $i ?>" <?php if($lat_date){ ?> value="<?php echo $lat_date ?>" <?php } ?>></td>
-        <td><?php echo  $paid==0 ?  "unpaid" : ($paid<$arr['Fees'] ?  "Partially Paid" :  "Paid"); ?></td>
-        <td><input type="button" value="Submit" onclick="submit(<?php echo $i ?>)"></td>
+            
         </tr>
-        <?php $i++; } ?>
+                <?php  } ?>
         
   </tbody>
 </table>
