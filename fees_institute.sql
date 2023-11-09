@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2023 at 01:01 PM
+-- Generation Time: Nov 09, 2023 at 12:20 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -20,6 +20,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `fees_institute`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `expenditure`
+--
+
+CREATE TABLE `expenditure` (
+  `expenditure_id` int(11) NOT NULL,
+  `payment_phone` varchar(255) NOT NULL,
+  `payment_name` varchar(255) NOT NULL,
+  `payment_date` date NOT NULL,
+  `payment_amt` int(11) NOT NULL,
+  `payment_purpose` varchar(255) NOT NULL,
+  `paid_by` varchar(255) NOT NULL,
+  `payment_month` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
 
@@ -42,7 +59,28 @@ CREATE TABLE `fees_history` (
 INSERT INTO `fees_history` (`fees_id`, `student_id`, `subject_id`, `date`, `month`) VALUES
 (1, 30, 18, '2023-11-05', '2023-11'),
 (2, 28, 15, '2023-11-03', '2023-11'),
-(3, 28, 16, '2023-11-03', '2023-11');
+(3, 28, 16, '2023-11-03', '2023-11'),
+(5, 30, 19, '2023-11-07', '2023-11'),
+(6, 48, 18, '2023-11-28', '2023-11'),
+(7, 30, 18, '2023-11-09', '2023-10'),
+(8, 30, 19, '2023-11-09', '2023-10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `income`
+--
+
+CREATE TABLE `income` (
+  `income_id` int(11) NOT NULL,
+  `payment_by` varchar(255) NOT NULL,
+  `payment_phone` varchar(255) NOT NULL,
+  `payment_date` date NOT NULL,
+  `payment_amt` int(11) NOT NULL,
+  `payment_purpose` varchar(255) NOT NULL,
+  `paid_by` varchar(255) NOT NULL,
+  `payment_month` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
 
@@ -68,27 +106,27 @@ CREATE TABLE `student_activity` (
 --
 
 INSERT INTO `student_activity` (`Activity_id`, `Student_id`, `Category_id`, `Subject_group_id`, `Subject_id`, `Actual_fees`, `Joining_date`, `Month`, `Teacher_id`, `Status`) VALUES
-(1, 0, 1, 0, 0, 0, '0000-00-00', '', 0, 'Y'),
+(1, 0, 1, 0, 0, 0, '0000-00-00', '', 30, 'Y'),
 (2, 10, 2, 0, 3, 500, '2023-09-01', '10', 2, 'Y'),
-(3, 11, 1, 0, 1, 500, '2023-10-01', '10', 1, 'Y'),
-(4, 11, 1, 0, 1, 500, '2023-10-01', '10', 1, 'Y'),
-(5, 11, 1, 0, 1, 500, '2023-10-01', '10', 1, 'Y'),
-(6, 12, 1, 0, 4, 1000, '2023-09-07', '10', 1, 'Y'),
+(3, 11, 1, 0, 1, 500, '2023-10-01', '10', 30, 'Y'),
+(4, 11, 1, 0, 1, 500, '2023-10-01', '10', 30, 'Y'),
+(5, 11, 1, 0, 1, 500, '2023-10-01', '10', 30, 'Y'),
+(6, 12, 1, 0, 4, 1000, '2023-09-07', '10', 30, 'Y'),
 (7, 10, 1, 0, 1, 4567, '2023-09-08', '09', 2, 'Y'),
-(8, 0, 11, 0, 1, 500, '2023-10-10', '10', 1, 'Y'),
-(9, 24, 11, 1, 1, 645, '2023-10-25', '10', 1, 'Y'),
+(8, 0, 11, 0, 1, 500, '2023-10-10', '10', 30, 'Y'),
+(9, 24, 11, 1, 1, 645, '2023-10-25', '10', 30, 'Y'),
 (10, 24, 11, 1, 4, 675, '2023-10-03', '10', 7, 'Y'),
 (11, 24, 11, 3, 3, 1000, '2023-09-25', '9', 2, 'Y'),
-(12, 25, 11, 1, 1, 645, '2023-10-25', '10', 1, 'Y'),
-(13, 28, 11, 1, 15, 500, '2023-10-27', '2023-10', 0, 'Y'),
-(14, 28, 11, 1, 16, 1000, '2023-10-21', '2023-10', 0, 'Y'),
-(15, 30, 11, 1, 18, 500, '2023-12-17', '2023-12', 37, 'Y'),
-(16, 30, 11, 6, 19, 400, '2023-11-04', '2023-11', 30, 'Y'),
+(12, 25, 11, 1, 1, 645, '2023-10-25', '10', 30, 'Y'),
+(13, 28, 11, 1, 15, 500, '2023-10-27', '2023-10', 30, 'Y'),
+(14, 28, 11, 1, 16, 1000, '2023-10-21', '2023-10', 30, 'Y'),
+(15, 30, 11, 1, 18, 700, '2023-12-17', '2023-12', 30, 'Y'),
+(16, 30, 11, 6, 19, 700, '2023-11-04', '2023-11', 30, 'Y'),
 (17, 31, 11, 1, 20, 405, '2023-11-04', '2023-11', 38, 'Y'),
 (18, 36, 11, 1, 18, 400, '2023-11-03', '2023-11', 38, 'Y'),
-(19, 47, 11, 1, 18, 400, '2023-11-05', 'November', 37, 'Y'),
+(19, 47, 11, 1, 18, 400, '2023-11-05', 'November', 30, 'Y'),
 (20, 47, 11, 1, 20, 1000, '2023-11-05', 'November', 38, 'Y'),
-(21, 48, 11, 1, 18, 500, '2023-11-05', 'November', 37, 'Y');
+(21, 48, 11, 1, 18, 600, '2023-11-05', 'November', 30, 'Y');
 
 -- --------------------------------------------------------
 
@@ -137,7 +175,8 @@ INSERT INTO `student_registration` (`Student_id`, `Student_name`, `Student_reg_n
 (30, 'Rohit ', '938349484', '2147483647', '', '0', '', 'male', '2023-11-02', '1', '2023-11-04', 'Y'),
 (31, 'Kritika', 'SCH24', '9807654123', '', '', '', 'male', '2023-11-04', '1', '2023-11-04', 'Y'),
 (32, 'Arnab', 'SCH25', '8909876589', '', '', '', 'male', '2023-11-04', '1', '2023-11-04', 'Y'),
-(48, 'Raman Rajwat', 'STUD21', '7980340947', 'dumdum', '5676709807', '', 'male', '2023-11-05', '3rd-Year', '2023-10-31', 'Y');
+(48, 'Raman Rajwat', 'STUD21', '7980340947', 'dumdum', '5676709807', '', 'male', '2023-11-05', '3rd-Year', '2023-10-31', 'Y'),
+(49, 'Rajarshi', 'STUD22', '9874561230', 'Baguiati', '9874561230', '', 'male', '2023-11-01', '2', '0000-00-00', 'Y');
 
 -- --------------------------------------------------------
 
@@ -282,9 +321,40 @@ INSERT INTO `teacher_activity` (`Teacher_activity_id`, `Teacher_id`, `Category_i
 (10, 40, 11, 1, 16, 'Y'),
 (11, 41, 11, 1, 20, 'Y');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `teacher_fees`
+--
+
+CREATE TABLE `teacher_fees` (
+  `teacher_fees_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  `total_fees` int(11) NOT NULL,
+  `percentage` int(11) NOT NULL,
+  `actual_fees` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `month` varchar(255) NOT NULL,
+  `paid_by` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `teacher_fees`
+--
+
+INSERT INTO `teacher_fees` (`teacher_fees_id`, `teacher_id`, `total_fees`, `percentage`, `actual_fees`, `date`, `month`, `paid_by`) VALUES
+(2, 37, 1700, 80, 1360, '2023-11-09', '2023-11', 'cash'),
+(3, 38, 1805, 80, 1444, '2023-11-09', '2023-11', 'cash');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `expenditure`
+--
+ALTER TABLE `expenditure`
+  ADD PRIMARY KEY (`expenditure_id`);
 
 --
 -- Indexes for table `fees_history`
@@ -339,14 +409,26 @@ ALTER TABLE `teacher_activity`
   ADD PRIMARY KEY (`Teacher_activity_id`);
 
 --
+-- Indexes for table `teacher_fees`
+--
+ALTER TABLE `teacher_fees`
+  ADD PRIMARY KEY (`teacher_fees_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `expenditure`
+--
+ALTER TABLE `expenditure`
+  MODIFY `expenditure_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `fees_history`
 --
 ALTER TABLE `fees_history`
-  MODIFY `fees_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `fees_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `student_activity`
@@ -358,7 +440,7 @@ ALTER TABLE `student_activity`
 -- AUTO_INCREMENT for table `student_registration`
 --
 ALTER TABLE `student_registration`
-  MODIFY `Student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `Student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `subject_category`
@@ -389,6 +471,12 @@ ALTER TABLE `teacher`
 --
 ALTER TABLE `teacher_activity`
   MODIFY `Teacher_activity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `teacher_fees`
+--
+ALTER TABLE `teacher_fees`
+  MODIFY `teacher_fees_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

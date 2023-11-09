@@ -3,7 +3,7 @@ include("conn.php");
 $subject=explode(",",$_REQUEST['sub']);
 $date=$_REQUEST['date'];
 $id=$_REQUEST['id'];
-$month=substr($date,0,7);
+$month=$_REQUEST['month'];
 //echo $month;
 foreach($subject as $sub)
 {

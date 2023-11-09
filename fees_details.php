@@ -5,7 +5,7 @@ if(empty($_REQUEST['id'])){
     @header("Location: fees_history.php");
 }
 $id=$_REQUEST['id'];
-$sql=mysqli_query($conn,"SELECT `Subject_name`,`Actual_Fees`,`fees_history`.`month`,date FROM `fees_history` INNER JOIN `student_activity` ON `fees_history`.`student_id`=`student_activity`.`Student_id` INNER JOIN `subject_master` ON `subject_master`.`Subject_id`=`fees_history`.`subject_id` WHERE `fees_history`.`student_id`='30' ORDER BY `month` DESC;");
+$sql=mysqli_query($conn,"SELECT `Subject_name`,`Actual_Fees`,`fees_history`.`month`,date FROM `fees_history` INNER JOIN `student_activity` ON `fees_history`.`student_id`=`student_activity`.`Student_id` INNER JOIN `subject_master` ON `subject_master`.`Subject_id`=`fees_history`.`subject_id` WHERE `fees_history`.`student_id`='30' GROUP BY `subject_master`.`Subject_id`,`month` ORDER BY `date` DESC;");
 
 $sql_name=mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `student_registration`  WHERE `Student_id`='$id' "));
 $name=$sql_name['Student_name'];

@@ -254,7 +254,7 @@ background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(231,241,230,1) 100
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-solid fa-building-columns"></i></a></h1>
-  <h1>Student Activity Form</h1>
+  <h1>Fees Update Form</h1>
   
   <form action="" name="paymentform" id="paymentform" method="post" onSubmit="return checking();">
     <input type="hidden" name="mode" value="1" />

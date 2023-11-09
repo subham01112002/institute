@@ -64,6 +64,12 @@
       <li class="nav-item">
         <a class="nav-link" href="teacher.php">Teacher Registration</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="teacher_payment.php">Teacher Payment</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="teacher_transfer.php">Teacher Transfer</a>
+      </li>
     </ul>
     
   </div>
