@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2023 at 07:48 AM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 8.1.10
+-- Generation Time: Nov 10, 2023 at 11:27 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,24 +29,21 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `expenditure` (
   `expenditure_id` int(11) NOT NULL,
-  `payment_phone` varchar(10) NOT NULL,
+  `payment_phone` varchar(255) NOT NULL,
   `payment_name` varchar(255) NOT NULL,
   `payment_date` date NOT NULL,
   `payment_amt` int(11) NOT NULL,
   `payment_purpose` varchar(255) NOT NULL,
   `paid_by` varchar(255) NOT NULL,
   `payment_month` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `expenditure`
 --
 
 INSERT INTO `expenditure` (`expenditure_id`, `payment_phone`, `payment_name`, `payment_date`, `payment_amt`, `payment_purpose`, `paid_by`, `payment_month`) VALUES
-(4, '3453498709', 'net banking', '2023-11-10', 1000, 'for tution', 'Cash', 'November'),
-(5, '7787900909', 'upi', '2023-11-10', 750, 'for batch', 'Cash', 'November'),
-(7, '7897500212', 'net banking', '2023-11-10', 1000, 'fine', 'Cash', 'November'),
-(8, '9908923231', 'net banking', '2023-11-10', 750, 'for institute', 'Cheque', 'November');
+(1, '9874561230', 'Alex Electronics', '2023-11-10', 10000, 'Electrical Setup', 'Cheque', '2023-11');
 
 -- --------------------------------------------------------
 
@@ -60,7 +57,7 @@ CREATE TABLE `fees_history` (
   `subject_id` int(11) NOT NULL,
   `date` varchar(255) NOT NULL,
   `month` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `fees_history`
@@ -90,18 +87,7 @@ CREATE TABLE `income` (
   `payment_purpose` varchar(255) NOT NULL,
   `paid_by` varchar(255) NOT NULL,
   `payment_month` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `income`
---
-
-INSERT INTO `income` (`income_id`, `payment_by`, `payment_phone`, `payment_date`, `payment_amt`, `payment_purpose`, `paid_by`, `payment_month`) VALUES
-(5, 'subhman', '3453498709', '2023-11-10', 1000, 'for tution', 'Cheque', 'November'),
-(6, 'arman', '9087654354', '2023-11-10', 600, 'fine', 'Cash', 'November'),
-(7, 'ritwick ghosh', '9908923231', '2023-11-10', 750, 'for institute', 'Cash', 'November'),
-(8, 'suman kumar jha', '9900245456', '2023-11-10', 1000, 'for tution', 'Cheque', 'November'),
-(9, 'raju', '7897500212', '2023-11-10', 750, 'fine', 'Cash', 'November');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
 
@@ -120,7 +106,7 @@ CREATE TABLE `student_activity` (
   `Month` varchar(20) NOT NULL,
   `Teacher_id` int(50) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `student_activity`
@@ -168,7 +154,7 @@ CREATE TABLE `student_registration` (
   `Class` varchar(50) NOT NULL,
   `Date_of_birth` date NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `student_registration`
@@ -209,7 +195,7 @@ CREATE TABLE `subject_category` (
   `Category_id` int(11) NOT NULL,
   `Category_name` varchar(500) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_category`
@@ -232,7 +218,7 @@ CREATE TABLE `subject_group` (
   `Subject_group_name` varchar(255) NOT NULL,
   `Category_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_group`
@@ -259,7 +245,7 @@ CREATE TABLE `subject_master` (
   `Category_id` int(11) NOT NULL,
   `Subject_group_id` int(250) NOT NULL,
   `Status` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subject_master`
@@ -290,7 +276,7 @@ CREATE TABLE `teacher` (
   `Teacher_reg_id` varchar(255) NOT NULL,
   `Category_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `teacher`
@@ -324,7 +310,7 @@ CREATE TABLE `teacher_activity` (
   `Subject_group_id` int(11) NOT NULL,
   `Subject_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `teacher_activity`
@@ -357,7 +343,7 @@ CREATE TABLE `teacher_fees` (
   `date` date NOT NULL,
   `month` varchar(255) NOT NULL,
   `paid_by` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `teacher_fees`
@@ -382,12 +368,6 @@ ALTER TABLE `expenditure`
 --
 ALTER TABLE `fees_history`
   ADD PRIMARY KEY (`fees_id`);
-
---
--- Indexes for table `income`
---
-ALTER TABLE `income`
-  ADD PRIMARY KEY (`income_id`);
 
 --
 -- Indexes for table `student_activity`
@@ -449,19 +429,13 @@ ALTER TABLE `teacher_fees`
 -- AUTO_INCREMENT for table `expenditure`
 --
 ALTER TABLE `expenditure`
-  MODIFY `expenditure_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `expenditure_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `fees_history`
 --
 ALTER TABLE `fees_history`
   MODIFY `fees_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `income`
---
-ALTER TABLE `income`
-  MODIFY `income_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `student_activity`

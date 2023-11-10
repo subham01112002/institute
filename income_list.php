@@ -43,8 +43,8 @@ $sql=mysqli_query($conn,"SELECT * FROM income   ORDER BY `payment_date` DESC");
         <td><?php echo $arr['payment_amt'] ?></td>
         <td><?php echo $arr['payment_purpose'] ?></td>
         <td><?php echo $arr['paid_by'] ?></td>
-        <td><?php echo $arr['payment_date'] ?></td>
-        <td><?php echo $arr['payment_month'] ?></td>
+        <td><input type="date" value="<?php echo $arr['payment_date'] ?>" readonly></td>
+        <td><input type="month" value="<?php echo $arr['payment_month'] ?>" readonly></td>
     
         </tr>
         <?php } ?>
