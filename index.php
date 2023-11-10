@@ -70,6 +70,18 @@
       <li class="nav-item">
         <a class="nav-link" href="teacher_transfer.php">Teacher Transfer</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="income.php">Income</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="expenditure.php">Expenditure</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="income_list.php">Income History Table</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="expenditure_list.php">Expenditure History Table</a>
+      </li>
     </ul>
     
   </div>
