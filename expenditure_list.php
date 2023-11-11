@@ -1,6 +1,14 @@
 <?php 
 include("conn.php");
-$sql=mysqli_query($conn,"SELECT * FROM expenditure   ORDER BY `payment_date` DESC");
+if(empty($_REQUEST['month'])){
+    $curr_month=date("m");
+    $curr_year=date("Y");
+}
+else{
+    $curr_month=$_REQUEST['month'];
+    $curr_year=$_REQUEST['year'];
+}
+$sql=mysqli_query($conn,"SELECT * FROM expenditure WHERE `payment_month` LIKE '$curr_year-$curr_month'  ORDER BY `payment_date` DESC");
 
 
 ?>
@@ -18,7 +26,31 @@ $sql=mysqli_query($conn,"SELECT * FROM expenditure   ORDER BY `payment_date` DES
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>Expenditure History</h1>
+  <div style="display:flex;justify-content:end;gap:10px">
+<select id="month" onchange="month(this.value)">
+<option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
+<option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if(date("m")<"2") echo "disabled"; ?>>February</option>
+<option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if(date("m")<"3") echo "disabled"; ?>>March</option>
+<option value="04" <?php if($curr_month=="4") echo "selected"; ?>  <?php if(date("m")<"4") echo "disabled"; ?>>April</option>
+<option value="05" <?php if($curr_month=="5") echo "selected"; ?>  <?php if(date("m")<"5") echo "disabled"; ?>>May</option>
+<option value="06" <?php if($curr_month=="6") echo "selected"; ?>  <?php if(date("m")<"6") echo "disabled"; ?>>June</option>
+<option value="07" <?php if($curr_month=="7") echo "selected"; ?>  <?php if(date("m")<"7") echo "disabled"; ?>>July</option>
+<option value="08" <?php if($curr_month=="8") echo "selected"; ?>  <?php if(date("m")<"8") echo "disabled"; ?>>August</option>
+<option value="09" <?php if($curr_month=="9") echo "selected"; ?> <?php if(date("m")<"9") echo "disabled"; ?>>September</option>
+<option value="10" <?php if($curr_month=="10") echo "selected"; ?> <?php if(date("m")<"10") echo "disabled"; ?>>October</option>
+<option value="11" <?php if($curr_month=="11") echo "selected"; ?>  <?php if(date("m")<"11") echo "disabled"; ?>>November</option>
+<option value="12" <?php if($curr_month=="12") echo "selected"; ?> <?php if(date("m")<"12") echo "disabled"; ?>>December</option>
 
+</select>
+<select id="year" onchange="year(this.value)">
+   
+<?php for($i=date("Y");$i>=2010;$i--){ ?>
+    
+    <option value="<?php echo $i; ?>" <?php if($curr_year==$i) echo "selected" ?>><?php echo $i; ?></option>
+    <?php } ?>
+   
+</select>
+</div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
@@ -59,7 +91,14 @@ $sql=mysqli_query($conn,"SELECT * FROM expenditure   ORDER BY `payment_date` DES
   crossorigin="anonymous"></script>
 
 <script>
-    
+       function month(val){
+
+window.location.href="expenditure_list.php?month="+val+"&year="+document.getElementById('year').value;
+}
+function year(val){
+
+window.location.href="expenditure_list.php?month="+document.getElementById('month').value+"&year="+val;
+}
 
 
     var box = paginator({

@@ -154,6 +154,20 @@ include("conn.php");
 									<option value=""> </option>
 									<option value="1" <?php if($data['Class']=="1") echo "selected" ?>>1</option>
 									<option value="2" <?php if($data['Class']=="2") echo "selected" ?>>2</option>
+                  <option value="3" <?php if($data['Class']=="3") echo "selected" ?>>3</option>
+                  <option value="4"<?php if($data['Class']=="4") echo "selected" ?>>4</option>
+                  <option value="5"<?php if($data['Class']=="5") echo "selected" ?>>5</option>
+                  <option value="6"<?php if($data['Class']=="6") echo "selected" ?>>6</option>
+									<option value="7"<?php if($data['Class']=="7") echo "selected" ?>>7</option>
+                  <option value="8"<?php if($data['Class']=="8") echo "selected" ?>>8</option>
+                  <option value="9"<?php if($data['Class']=="9") echo "selected" ?>>9</option>
+                  <option value="10"<?php if($data['Class']=="10") echo "selected" ?>>10</option>
+                  <option value="11"<?php if($data['Class']=="11") echo "selected" ?>>11</option>
+									<option value="12"<?php if($data['Class']=="12") echo "selected" ?>>12</option>
+                  <option value="1st-Year" <?php if($data['Class']=="1st-Year") echo "selected" ?> >1st year</option>
+                  <option value="2nd-Year" <?php if($data['Class']=="2nd-Year") echo "selected" ?>>2nd year</option>
+                  <option value="3rd-Year" <?php if($data['Class']=="3rd-Year") echo "selected" ?>>3rd year</option>
+                  <option value="4th-Year" <?php if($data['Class']=="4th-Year") echo "selected" ?>>4th year</option>
 			</select>
     </div>
     <div class="form-group">  

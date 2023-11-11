@@ -9,7 +9,7 @@ else{
     $curr_month=$_REQUEST['month'];
     $curr_year=$_REQUEST['year'];
 }
-$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` GROUP BY `student_activity`.`Student_id`");
+$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31'  GROUP BY `student_activity`.`Student_id`");
 
 
 ?>
@@ -29,18 +29,18 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
   <h1>Fees History</h1>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
-<option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if($curr_month<"1") echo "disabled"; ?>>January</option>
-<option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if($curr_month<"2") echo "disabled"; ?>>February</option>
-<option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if($curr_month<"3") echo "disabled"; ?>>March</option>
-<option value="04" <?php if($curr_month=="4") echo "selected"; ?>  <?php if($curr_month<"4") echo "disabled"; ?>>April</option>
-<option value="05" <?php if($curr_month=="5") echo "selected"; ?>  <?php if($curr_month<"5") echo "disabled"; ?>>May</option>
-<option value="06" <?php if($curr_month=="6") echo "selected"; ?>  <?php if($curr_month<"6") echo "disabled"; ?>>June</option>
-<option value="07" <?php if($curr_month=="7") echo "selected"; ?>  <?php if($curr_month<"7") echo "disabled"; ?>>July</option>
-<option value="08" <?php if($curr_month=="8") echo "selected"; ?>  <?php if($curr_month<"8") echo "disabled"; ?>>August</option>
-<option value="09" <?php if($curr_month=="9") echo "selected"; ?> <?php if($curr_month<"9") echo "disabled"; ?>>September</option>
-<option value="10" <?php if($curr_month=="10") echo "selected"; ?> <?php if($curr_month<"10") echo "disabled"; ?>>October</option>
-<option value="11" <?php if($curr_month=="11") echo "selected"; ?>  <?php if($curr_month<"11") echo "disabled"; ?>>November</option>
-<option value="12" <?php if($curr_month=="12") echo "selected"; ?> <?php if($curr_month<"12") echo "disabled"; ?>>December</option>
+<option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
+<option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if(date("m")<"2") echo "disabled"; ?>>February</option>
+<option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if(date("m")<"3") echo "disabled"; ?>>March</option>
+<option value="04" <?php if($curr_month=="4") echo "selected"; ?>  <?php if(date("m")<"4") echo "disabled"; ?>>April</option>
+<option value="05" <?php if($curr_month=="5") echo "selected"; ?>  <?php if(date("m")<"5") echo "disabled"; ?>>May</option>
+<option value="06" <?php if($curr_month=="6") echo "selected"; ?>  <?php if(date("m")<"6") echo "disabled"; ?>>June</option>
+<option value="07" <?php if($curr_month=="7") echo "selected"; ?>  <?php if(date("m")<"7") echo "disabled"; ?>>July</option>
+<option value="08" <?php if($curr_month=="8") echo "selected"; ?>  <?php if(date("m")<"8") echo "disabled"; ?>>August</option>
+<option value="09" <?php if($curr_month=="9") echo "selected"; ?> <?php if(date("m")<"9") echo "disabled"; ?>>September</option>
+<option value="10" <?php if($curr_month=="10") echo "selected"; ?> <?php if(date("m")<"10") echo "disabled"; ?>>October</option>
+<option value="11" <?php if($curr_month=="11") echo "selected"; ?>  <?php if(date("m")<"11") echo "disabled"; ?>>November</option>
+<option value="12" <?php if($curr_month=="12") echo "selected"; ?> <?php if(date("m")<"12") echo "disabled"; ?>>December</option>
 
 </select>
 <select id="year" onchange="year(this.value)">
@@ -164,27 +164,31 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
     }
     function select_all(num) { 
         var sum=0;
-        if(document.getElementsByClassName('fees_all-'+num)[0].checked===true)
+        if(document.getElementsByClassName('fees_all-'+num)[0].checked===true){
         for(let i of document.getElementsByClassName('fees-'+num))
         {
-            if(!i.disabled){
+            if(!i.disabled & !i.checked){
             i.checked=true;
-            sum+=i.value;
+            sum+=Number(i.value);
         }
+    }
         document.getElementsByClassName('fees_all-'+num)[0].value=sum;
         fees(document.getElementsByClassName('fees_all-'+num)[0],num);
-     
+    
         }
-        else
+        else{
         for(let i of document.getElementsByClassName('fees-'+num))
         {
             if(!i.disabled){
             i.checked=false;
+            
             sum-=i.value;
         }
-        document.getElementById('paid-'+num).innerHTML=Number(document.getElementById('paid-'+num).innerHTML)+sum;
-    
     }
+        
+        document.getElementById('paid-'+num).innerHTML=Number(document.getElementById('paid-'+num).innerHTML)+sum;
+        }
+    
     
         }  
      function fees(ele,cls)
