@@ -115,7 +115,10 @@
     </div>
     <div class="form-group">
       <label for="reg_id">Registration No</label>
-      <input class="form-control" id="Teacher_reg_id" type="text" name="Teacher_reg_id" value="TCH<?php echo $m['count'] ?>" readonly />
+      <input class="form-control" id="Teacher_reg_id" type="text" name="Teacher_reg_id" value="TCH<?php if($m)
+    {
+      echo $m['count']+1;  
+    } else echo 1;?>" readonly />
     </div>
     <div class="form-group">
       <label for="categoryid">Category Name</label>

@@ -157,7 +157,10 @@ if(mysqli_connect_errno()){
     </div>
     <div class="form-group">
       <label for="registration-id">Registration Id</label>
-      <input class="form-control" id="Student_reg_no" type="text" name="Student_reg_no" value="STUD<?php echo $m['count'] ?>" readonly>
+      <input class="form-control" id="Student_reg_no" type="text" name="Student_reg_no" value="STUD<?php if($m)
+    {
+      echo $m['count']+1;  
+    } else echo 1;?>" readonly>
     </div>
     <div class="form-group">
       <label for="student-name">Phone-No *</label>

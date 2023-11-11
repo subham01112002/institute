@@ -3,6 +3,31 @@
     if(mysqli_connect_errno()){
         echo "failed to connect to mysql" . mysqli_connect_error();
     }
+    if(isset($_REQUEST['search']))
+    {
+      $phone=$_REQUEST['phone'];
+      $search=mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `expenditure` WHERE `payment_phone`='$phone' ORDER BY `payment_date` DESC"));
+      if(!$search)
+      {
+        $mspg="No Matching Record Found";
+      }
+      else{
+        $mspg="";
+      }
+    }
+    else if(isset($_REQUEST['copy']))
+    {
+      $phone=$_REQUEST['phone'];
+      $copy=mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `expenditure` WHERE `payment_phone`='$phone' ORDER BY `payment_date` DESC"));
+      if(!$copy)
+      {
+        $mspg="No Matching Record Found";
+      }
+      else{
+        $mspg="";
+      }
+    }
+    else{
     if(!empty($_REQUEST['msg']))
         {  
           $mspg = $_REQUEST['msg'];  
@@ -11,7 +36,7 @@
         {   
           $mspg  = ""; 
         } 
-
+      }
     if(!empty($_REQUEST['mode']))
     {  
       $res_payment_phone = $_REQUEST['payment_phone'];
@@ -22,58 +47,7 @@
       $res_payment_purpose = ucwords($payment_purpose);
       $res_paid_by = $_REQUEST['paid_by'];
       $res_payment_date = $_REQUEST['payment_date'];
-      $m=date("m");
-      if($m == 1)
-      {
-        $res_payment_month = 'Jannuary';
-      }
-      elseif($m == 2)
-      {
-        $res_payment_month = 'February';
-      }
-      elseif($m == 3)
-      {
-        $res_payment_month = 'March';
-      }
-      elseif($m == 4)
-      {
-        $res_payment_month = 'April';
-      }
-      elseif($m == 5)
-      {
-        $res_payment_month = 'May';
-      }
-      elseif($m == 6)
-      {
-        $res_payment_month = 'June';
-      }
-      elseif($m == 7)
-      {
-        $res_payment_month = 'July';
-      }
-      elseif($m == 8)
-      {
-        $res_payment_month = 'August';
-      }
-      elseif($m == 9)
-      {
-        $res_payment_month = 'September';
-      }
-      elseif($m == 10)
-      {
-        $res_payment_month = 'October';
-      }
-      elseif($m == 11)
-      {
-        $res_payment_month = 'November';
-      }
-      elseif($m == 12)
-      {
-        $res_payment_month = 'December';
-      }
-      else{
-        @header("Location: expenditure.php");
-      }
+      $res_payment_month=substr($res_payment_date,0,7);      
 
       $sql_con="INSERT INTO `expenditure` SET 
                 `payment_name`= '$res_payment_name',
@@ -158,26 +132,31 @@
     
     <div class="form-group">
       <label for="category-type">Payment Phone Number :</label>
-      <input class="form-control" id="payment_phone" type="text" name="payment_phone" style="text-transform: capitalize;" placeholder='Enter your phone no here'/>
+      <input class="form-control"  id="payment_phone" type="text"  name="payment_phone" style="text-transform: capitalize;" placeholder='Enter your phone no here' value="<?php if(isset($search))  { echo $phone; } if(isset($copy)) echo $phone; ?> " />
+      <div class="phone" style="display:flex;justify-content:end;gap:10px;color:rgba(148,178,233,1)">
+      
+      <i class="fa-solid fa-magnifying-glass ico" title="Search Last Payment Name" onclick="search()"></i><i class="fa-solid fa-copy ico" title="Copy Last Payment" onclick="copy()"></i>
+      
+      </div>
     </div> 
     <div class="form-group">
       <label for="category-type">Payment Name :</label>
-      <input class="form-control" id="payment_name" type="int" name="payment_name" style="text-transform: capitalize;" placeholder='Enter your payment name'/>
+      <input class="form-control" id="payment_name" type="int" name="payment_name" style="text-transform: capitalize;" placeholder='Enter your payment name' value="<?php if(isset($search))  { echo $search['payment_name']; } if(isset($copy)) echo $copy['payment_name']; ?> " />
     </div> 
     <div class="form-group">
       <label for="category-type">Payment Amount :</label>
-      <input class="form-control" id="payment_amt" type="int" name="payment_amt" style="text-transform: capitalize;" placeholder='Enter your amount here'/>
+      <input class="form-control" id="payment_amt" type="int" name="payment_amt" style="text-transform: capitalize;" placeholder='Enter your amount here' value="<?php if(isset($copy)) echo $copy['payment_amt'];  ?>"/>
     </div> 
     <div class="form-group">
       <label for="category-type">Payment Purpose :</label>
-      <input class="form-control" id="payment_purpose" type="text" name="payment_purpose" style="text-transform: capitalize;" />
+      <input class="form-control" id="payment_purpose" type="text" name="payment_purpose" style="text-transform: capitalize;" value="<?php if(isset($copy)) echo $copy['payment_purpose'];  ?>" />
     </div> 
     <div class="form-group">
       <label for="category-type">Paid By :</label>
       <select class="form-control" name="paid_by" id="paid_by" >
               <option value=""> Select Payment Method</option>  
-              <option value="Cash"> Cash</option>
-              <option value="Cheque"> Cheque</option>
+              <option value="Cash" <?php if(isset($copy) && $copy['paid_by']=='Cash') echo "selected"   ?> > Cash</option>
+              <option value="Cheque" <?php if(isset($copy) && $copy['paid_by']=='Cheque') echo "selected"   ?>> Cheque</option>
 	    </select>
     </div> 
     <div class="form-group">
@@ -195,5 +174,21 @@
 		</tr>
 </table>
 </div>
+<script>
+  function search(){
+    if(document.getElementById('payment_phone').value!="")
+    {
+      window.location.href="expenditure.php?search=true&phone="+document.getElementById('payment_phone').value.trim();
+ 
+    }
+  }
+  
+  function copy(){
+    if(document.getElementById('payment_phone').value!="")
+    {
+    window.location.href="expenditure.php?copy=true&phone="+document.getElementById('payment_phone').value.trim();
+    }
+  }
+</script>
 </body>
 </html>

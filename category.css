@@ -46,6 +46,10 @@ input[type=text],input[type=int],input[type=date], select {
   
 
 }
+.ico{
+  font-size: 1.3rem;
+  cursor: pointer;
+}
 
 input:focus {
   background: rgba(0, 0, 0, 0.1);
