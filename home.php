@@ -15,11 +15,13 @@ if(mysqli_connect_errno()){
 
   if(!empty($_REQUEST['mode']))
     {  
-      $res_studentname = $_REQUEST['Student_name']; 
+      $studentname = $_REQUEST['Student_name'];
+      $res_studentname = ucwords($studentname);
       $res_Studentregno = $_REQUEST['Student_reg_no'];
       $res_Phoneno = $_REQUEST['Phone_no'];
       $res_GuardianPhone = $_REQUEST['Guardian_Phone']; 
-      $res_Address = $_REQUEST['Address'];
+      $Address = $_REQUEST['Address'];
+      $res_Address = ucwords($Address);
       $res_Emailid = $_REQUEST['Email'];
       $res_Gender = $_REQUEST['Gender']; 
       $res_Joiningdate = $_REQUEST['Joining_date'];
@@ -79,34 +81,35 @@ if(mysqli_connect_errno()){
       
 		function checking()
 		{
-      var word = document.getElementById('Student_name').value;
-      var ind=word.lastIndexOf(" ");
-      if(ind !== -1){
-      var second= word.slice(ind+1);
-      var capitalized =word.charAt(0).toUpperCase() + word.slice(1,ind+1);
-      var capital=second.charAt(0).toUpperCase() + second.slice(1);
-      var final = capitalized.concat(capital);
-      }
-      else{
-        var final = word.charAt(0).toUpperCase() + word.slice(1);
-      }
+      let mob = document.getElementById('Phone_no').value;
+      let  mobile = mob.trim();
       
-  
 				if(document.getElementById('Student_name').value=='')
 				{
 					alert('Please enter  your name!');
 					document.subjectform.Student_name.focus();
 					return false;
 				}
-        else{
-          document.getElementById('Student_name').value = final;
-        }
 				if(document.getElementById('Student_reg_no').value=='')
 				{
 					alert('Please enter registration no!');
 					document.subjectform.Student_reg_no.focus();
 					return false;
 				}
+        if(document.getElementById('Phone_no').value=='')
+				{
+					alert('Please enter your phone no!');
+					document.subjectform.Phone_no.focus();
+					return false;
+				}
+        else if(mobile.length > 10){
+          alert('Please enter valid phone no !');
+					document.subjectform.Phone_no.focus();
+					return false;
+        }
+        else{
+          alert("ok");
+        }
 				if(document.getElementById('Guardian_Phone').value=='')
 				{
 					alert('Please enter Guardian phone no!');
@@ -166,7 +169,7 @@ if(mysqli_connect_errno()){
     </div>
     <div class="form-group">
       <label for="address">Address *</label>
-      <input class="form-control" id="Address" type="text" name="Address" placeholder='Enter your address (mandatory fields)'>
+      <input class="form-control" id="Address" type="text" name="Address" style="text-transform: capitalize;" placeholder='Enter your address (mandatory fields)'>
     </div>
     <div class="form-group">
       <label for="email">Email-Id</label>
@@ -176,8 +179,8 @@ if(mysqli_connect_errno()){
       <label for="Gender">Gender *</label>
       <select class="form-control" name="Gender" id="Gender" placeholder='Enter your gender (mandatory fields)' >
 									<option value="">Enter your gender (mandatory fields) </option>
-									<option value="male">Male</option>
-									<option value="female">Female</option>
+									<option value="Male">Male</option>
+									<option value="Female">Female</option>
 			</select>
     </div>
     <div class="form-group">  

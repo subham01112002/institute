@@ -36,6 +36,17 @@
     <link rel = "stylesheet" href="student_act.css" >
     <link rel = "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Document</title>
+    <script>
+      function checking()
+		{
+     if(document.getElementById('Actual_fees').value=='')
+				{
+					alert('Please enter edited version of fees!');
+					document.paymentform.Actual_fees.focus();
+					return false;
+				}	
+      }
+    </script>
     
 </head>
 <body>
@@ -52,7 +63,7 @@
     </div>
     <div class="form-group">
       <label for="fees">Subject Name</label>
-      <input class="form-control" id="Actual_fees" type="int" name="Subject" value="<?php echo $arr['Subject_name']; ?>" disabled/>
+      <input class="form-control" id="Subject" type="int" name="Subject" value="<?php echo $arr['Subject_name']; ?>" disabled/>
     </div>
     
     <div class="form-group">

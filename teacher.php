@@ -15,10 +15,13 @@
 
     if(!empty($_REQUEST['mode']))
     {  
-      $res_name = $_REQUEST['Teacher_name'];
+
+      $name = $_REQUEST['Teacher_name'];
+      $res_name = ucwords($name);
       $res_phone = $_REQUEST['Teacher_phone'];
       $res_regid = $_REQUEST['Teacher_reg_id'];
       $res_cateid = $_REQUEST['Category_id'];  
+
       if(!empty($_REQUEST['Status']))
       {
         $res_status = $_REQUEST['Status'];
@@ -67,25 +70,12 @@
     <script language="javascript" type="text/javascript">
 		function checking()
 		{
-      const word = document.getElementById('Teacher_name').value;
-      
-      var ind=word.lastIndexOf(" ");
-      if(ind!=-1){
-      var second= word.slice(ind+1);
-      const capitalized =word.charAt(0).toUpperCase() + word.substr(1,ind+1);
-      const capital=second.charAt(0).toUpperCase() + second.slice(1);
-      const final = capitalized.concat(capital);
-      }
 				if(document.getElementById('Teacher_name').value=='')
 				{
 					alert('Please enter your name !');
 					document.teacherform.Teacher_name.focus();
 					return false;
-				}
-        else{
-          document.getElementById('Teacher_name').value= final;
-        }
-				
+				}	
 				if(document.getElementById('Teacher_phone').value=='')
 				{
 					alert('Please enter phone!');

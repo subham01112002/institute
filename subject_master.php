@@ -11,17 +11,18 @@
     {   
       $mspg  = ""; 
     } 
-    $rem= "SELECT * FROM `subject_category` ORDER BY `Category_id`";
-    $sql= mysqli_query($conn,$rem);
+    $req=" SELECT * FROM  `subject_category` ORDER BY `Category_id`";
+    $qut=mysqli_query($conn,$req);
 
-    $ron= "SELECT * FROM `subject_group` ORDER BY `Subject_group_id`";
-    $spl= mysqli_query($conn,$ron);
+    $rem=" SELECT * FROM  `subject_group`  ORDER BY `Subject_group_id`";
+    $que=mysqli_query($conn,$rem);
 
     if(!empty($_REQUEST['mode']))
     { 
       $res_categoryid = $_REQUEST['Category_id'];
       $res_subjectgroupid = $_REQUEST['Subject_group_id']; 
-      $res_subject = $_REQUEST['Subject_name']; 
+      $subject = $_REQUEST['Subject_name']; 
+      $res_subject = ucwords($subject);
       
       if(!empty($_REQUEST['Status']))
       {
@@ -60,8 +61,6 @@
     <script language="javascript" type="text/javascript">
 		function checking()
 		{
-      const word = document.getElementById('Subject_name').value;
-      const capitalized =word.charAt(0).toUpperCase() + word.slice(1);
       if(document.getElementById('Category_id').value=='')
 				{
 					alert('Please enter category name!');
@@ -79,12 +78,7 @@
 					alert('Please enter subject name type!');
 					document.subjectform.Subject_name.focus();
 					return false;
-				}
-        else{
-          document.getElementById('Subject_name').value=capitalized;
-        }
-				
-					
+				}		
 		}
 	</script>
 </head>
@@ -96,22 +90,22 @@
   <input type="hidden" name="mode" value="1" />
   
   <div class="form-group">
-      <label for="Domain-name">Category Name</label>
-      <select class="form-control" name="Category_id" id="Category_id" >
-									<option value=""> Select your Category Name</option>
-                  <?php while($arr = mysqli_fetch_array($sql)) { ?>
-									<option value="<?php echo $arr['Category_id'] ; ?>" ><?php echo $arr['Category_name'] ; ?></option>								
+      <label for="categoryid">Category Name</label>
+      <select class="form-control" name="Category_id" id="Category_id" onchange="subject_groupchk(this.value)" >
+									<option value=""> Select Your Category</option>
+									<?php while($c=mysqli_fetch_array($qut)){ ?>
+									<option value="<?php echo $c['Category_id'] ?>"><?php echo $c['Category_name'] ?></option>
                   <?php } ?>
-			</select>
+	    </select>
     </div>
     <div class="form-group">
-      <label for="category-type">Subject Group Name</label>
-      <select class="form-control" name="Subject_group_id" id="Subject_group_id" >
-              <option value=""> Select your Category Name</option>
-              <?php while($b = mysqli_fetch_array($spl)) { ?>
-							<option value="<?php echo $b['Subject_group_id'] ; ?>" ><?php echo $b['Subject_group_name'] ; ?></option>								
-              <?php } ?>
-			</select>
+      <label for="categoryid">Subject Group Name</label>
+      <select class="form-control" name="Subject_group_id" id="Subject_group_id"  >
+									<option value=""> Select Your subject group</option>
+									<?php  while($c=mysqli_fetch_array($que)){ ?>
+                  <option value="<?php echo $c['Subject_group_id'] ?>" data-value="<?php echo $c['Category_id'] ?>" data-subb="<?php echo $c['Subject_group_name'] ?>"><?php echo $c['Subject_group_name'] ?></option>
+                  <?php } ?>
+	    </select>
     </div>
     <div class="form-group">
       <label for="subject-name">Subject</label>
@@ -131,5 +125,22 @@
 		</tr>
 </table>
 </div>
+<script>
+  const elem=document.getElementById('Subject_group_id').cloneNode(true);
+  const ogg=elem.options;
+  console.log(ogg);
+  document.getElementById('Subject_group_id').innerHTML='<option value=""> Please Select a Category</option>';
+  function subject_groupchk(vall){
+    document.getElementById('Subject_group_id').innerHTML='<option value=""> Please Select a Subject Group</option>';
+  
+    for(let j of ogg)
+    {
+      if(j.dataset)
+      console.log(j.dataset.value)
+       if(j.dataset.value===vall)
+      document.getElementById('Subject_group_id').innerHTML+=`<option value="${j.value}"> ${j.dataset.subb}</option>`; 
+    }
+  }
+  </script>
 </body>
 </html>

@@ -15,9 +15,11 @@
     if(!empty($_REQUEST['mode']))
     {  
       $res_payment_phone = $_REQUEST['payment_phone'];
-      $res_payment_name = $_REQUEST['payment_name'];
+      $payment_name = $_REQUEST['payment_name'];
+      $res_payment_name = ucwords($payment_name);
       $res_pay_amt = $_REQUEST['payment_amt'];
-      $res_payment_purpose = $_REQUEST['payment_purpose'];
+      $payment_purpose = $_REQUEST['payment_purpose'];
+      $res_payment_purpose = ucwords($payment_purpose);
       $res_paid_by = $_REQUEST['paid_by'];
       $res_payment_date = $_REQUEST['payment_date'];
       $m=date("m");
@@ -103,18 +105,9 @@
     <script language="javascript" type="text/javascript">
 		function checking()
 		{
-      /*var first=document.getelementbyid('Category_name').value;
-      var capital= first.charAt(0).touppercase() + first.slice(1);
-				if(document.getElementById('payment_by').value=='')
-				{
-					alert('Please enter category!');
-					document.payment.payment_by.focus();
-					return false;
-				}
-        else{
-          document.getelementbyid('Category_name').value=capital;
-        }*/
-        if(document.getElementById('payment_phone').value=='')
+      let mob = document.getElementById('payment_phone').value;
+      let  mobile = mob.trim();
+        if(mobile.length != 10)
 				{
 					alert('Please enter phone no!');
 					document.payment.payment_phone.focus();
@@ -189,10 +182,10 @@
     </div> 
     <div class="form-group">
       <label for="category-type">Payment Date :</label>
-      <input class="form-control" id="payment_date" type="date" name="payment_date"  value="<?php echo date("Y-m-d")?>" readonly/>
+      <input class="form-control" id="payment_date" type="date" name="payment_date"  value="<?php echo date("Y-m-d")?>" max="<?php echo date("Y-m-d")?>" />
     </div>     
     
-    <div class="but">
+    <div class="button">
       <input class="btn btn-primary" type="submit" value="Submit" />
     </div>
   </form>

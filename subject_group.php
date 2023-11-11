@@ -18,7 +18,8 @@
     if(!empty($_REQUEST['mode']))
     {  
       $res_category_id = $_REQUEST['Category_id']; 
-      $res_subject_typename = $_REQUEST['Subject_group_name'];
+      $subject_typename = $_REQUEST['Subject_group_name'];
+      $res_subject_typename = ucwords($subject_typename);
       if(!empty($_REQUEST['Status']))
       {
         $res_status = $_REQUEST['Status'];
@@ -55,8 +56,6 @@
     <script language="javascript" type="text/javascript">
 		function checking()
 		{
-      const word = document.getElementById('Subject_group_name').value;
-      const capitalized =word.charAt(0).toUpperCase() + word.slice(1);
 				if(document.getElementById('Category_id').value=='')
 				{
 					alert('Please enter category!');
@@ -69,9 +68,6 @@
 					document.subjectform.Subject_group_name.focus();
 					return false;
 				}	
-        else{
-          document.getElementById('Subject_group_name').value = capitalized;
-        }
 		}
 	</script>
 </head>
@@ -98,7 +94,7 @@
       <input class="form-control" id="Subject_group_name" type="text" name="Subject_group_name" style="text-transform: capitalize;" placeholder='Enter your subject group here'/>
     </div>
     <input type="checkbox" name="Status" id="Status" value="Y" checked /> Status
-    <div class="but">
+    <div class="button">
       <input class="btn btn-primary" type="submit" value="Submit" />
     </div>
   </form>

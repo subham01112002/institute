@@ -31,7 +31,7 @@ background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(231,241,230,1) 100
   
   }
   
-  input, select {
+  input[type=text],input[type=int], select {
     
     border-radius: 5px;
     font-family: inherit;

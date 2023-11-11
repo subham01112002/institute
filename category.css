@@ -32,7 +32,7 @@ h1  {
 
 }
 
-input, select {
+input[type=text],input[type=int],input[type=date], select {
   
   border-radius: 5px;
   font-family: inherit;
@@ -58,7 +58,7 @@ label {
     sans-serif;
 }
 
-.but{
+.button{
   display: flex;
   justify-content: center;
   margin-top: 20px;

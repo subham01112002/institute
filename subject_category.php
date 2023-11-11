@@ -14,7 +14,8 @@
 
     if(!empty($_REQUEST['mode']))
     {  
-      $res_categoryname = $_REQUEST['Category_name'];
+      $categoryname = $_REQUEST['Category_name'];
+      $res_categoryname = ucwords($categoryname);
       if(!empty($_REQUEST['Status']))
       {
         $res_status = $_REQUEST['Status'];
@@ -50,17 +51,12 @@
     <script language="javascript" type="text/javascript">
 		function checking()
 		{
-      var first=document.getelementbyid('Category_name').value;
-      var capital= first.charAt(0).touppercase() + first.slice(1);
 				if(document.getElementById('Category_name').value=='')
 				{
 					alert('Please enter category!');
 					document.subjectform.Category_name.focus();
 					return false;
 				}
-        else{
-          document.getelementbyid('Category_name').value=capital;
-        }
 		}
 	</script>
 </head>
@@ -77,7 +73,7 @@
       <input class="form-control" id="Category_name" type="text" name="Category_name" style="text-transform: capitalize;" placeholder='Enter your category here'/>
     </div>    
     <input type="checkbox" name="Status" id="Status" value="Y" checked /> Status
-    <div class="but">
+    <div class="button">
       <input class="btn btn-primary" type="submit" value="Submit" />
     </div>
   </form>
