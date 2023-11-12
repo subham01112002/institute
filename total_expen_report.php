@@ -11,7 +11,7 @@ else{
 }
 
 
-$sql=mysqli_query($conn,"SELECT * FROM expenditure WHERE `payment_month` LIKE '$curr_year-$curr_month'    ORDER BY `payment_date` DESC");
+$sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fees AS 'expenditure',Teacher_phone AS 'phone' FROM `teacher_fees` INNER JOIN `teacher` ON `teacher_fees`.`teacher_id` = `teacher`.`Teacher_id` WHERE `month` LIKE '$curr_year-$curr_month') UNION (SELECT payment_name,payment_date,payment_amt,payment_phone FROM `expenditure`  WHERE `payment_month` LIKE '$curr_year-$curr_month') ORDER BY `date` DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +26,7 @@ $sql=mysqli_query($conn,"SELECT * FROM expenditure WHERE `payment_month` LIKE '$
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Income History</h1>
+  <h1>Expenditure Report</h1>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
@@ -69,10 +69,10 @@ $sql=mysqli_query($conn,"SELECT * FROM expenditure WHERE `payment_month` LIKE '$
              while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
             
-        <td><?php echo $arr['payment_date'] ?></td>
-        <td><?php echo $arr['payment_name'] ?></td>
-        <td><?php echo $arr['payment_phone'] ?></td>
-        <td><?php echo $arr['payment_amt'] ?></td>
+        <td><?php echo $arr['date'] ?></td>
+        <td><?php echo $arr['name'] ?></td>
+        <td><?php echo $arr['phone'] ?></td>
+        <td><?php echo $arr['expenditure'] ?></td>
         </tr>
         <?php $i++; } ?>
         

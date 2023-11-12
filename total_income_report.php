@@ -11,7 +11,7 @@ else{
 }
 
 
-$sql=mysqli_query($conn,"SELECT * FROM income WHERE `payment_month` LIKE '$curr_year-$curr_month'    ORDER BY `payment_date` DESC");
+$sql=mysqli_query($conn,"(SELECT Student_name AS 'name',Actual_fees AS 'money',Phone_no AS 'phone', date AS 'date' , `fees_history`.month AS 'month'  FROM `fees_history` INNER JOIN `subject_master` ON `fees_history`.`subject_id` = `subject_master`.`Subject_id` INNER JOIN   student_registration ON `student_registration`.`Student_id`=`fees_history`.`student_id` INNER JOIN  student_activity ON `student_activity`.`Student_id` = `fees_history`.`student_id` WHERE `fees_history`.`date` LIKE '$curr_year-$curr_month-%')  UNION (SELECT payment_by,payment_amt,payment_phone,payment_date,payment_month FROM `income` WHERE `payment_month` LIKE '$curr_year-$curr_month')   ORDER BY date DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +26,7 @@ $sql=mysqli_query($conn,"SELECT * FROM income WHERE `payment_month` LIKE '$curr_
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Expenditure History</h1>
+  <h1>All Income Report</h1>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
@@ -58,7 +58,7 @@ $sql=mysqli_query($conn,"SELECT * FROM income WHERE `payment_month` LIKE '$curr_
     <thead>
         <tr>
           <th>Payment Date</th>
-          <th>Paid to</th>
+          <th>Paid By</th>
           <th>Phone number</th>
           <th>Amount</th>
         </tr>
@@ -69,10 +69,10 @@ $sql=mysqli_query($conn,"SELECT * FROM income WHERE `payment_month` LIKE '$curr_
              while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
             
-        <td><?php echo $arr['payment_date'] ?></td>
-        <td><?php echo $arr['payment_by'] ?></td>
-        <td><?php echo $arr['payment_phone'] ?></td>
-        <td><?php echo $arr['payment_amt'] ?></td>
+        <td><?php echo $arr['date'] ?></td>
+        <td><?php echo $arr['name'] ?></td>
+        <td><?php echo $arr['phone'] ?></td>
+        <td><?php echo $arr['money'] ?></td>
         </tr>
         <?php $i++; } ?>
         
