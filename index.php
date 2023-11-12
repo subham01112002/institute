@@ -76,7 +76,16 @@
         <a class="nav-link" href="income_list.php">Income History Table</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="total_income_report.php">Income report Table</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="expenditure_list.php">Expenditure History Table</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="total_expen_report.php">Expenditure report Table</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="debit_credit.php">Credit-Debit Table</a>
       </li>
     </ul>
     
