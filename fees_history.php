@@ -26,7 +26,12 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Fees History</h1>
+  <h1>Fees History - <span id="content">All</span></h1>
+  <div style="display:flex;justify-content:center;gap:10px">
+    <span onclick="filter('all')" style="cursor:pointer;">All</span>
+    <span onclick="filter('paid')" style="cursor:pointer;">Paid</span>
+    <span onclick="filter('unpaid')" style="cursor:pointer;">Unpaid</span>
+</div>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
@@ -54,7 +59,7 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
 </div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
-  <table>
+  <table id="myTable">
     <thead>
         <tr>
           <th>Name</th>
@@ -114,7 +119,7 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
         <td><?php echo $arr['Fees'] ?></td>
         <td id="paid-<?php  echo $i  ?>"><?php echo $paid; ?></td>
         <td><input type="date" class="date-<?php echo $i ?>" <?php if($lat_date){ ?> value="<?php echo $lat_date ?>" <?php } ?>></td>
-        <td><?php echo  $paid==0 ?  "unpaid" : ($paid<$arr['Fees'] ?  "Partially Paid" :  "Paid"); ?></td>
+        <td><?php echo  $paid==0 ?  "Unpaid" : ($paid<$arr['Fees'] ?  "Partially Paid" :  "Paid"); ?></td>
         <td><input type="button" value="Submit" onclick="submit(<?php echo $i ?>)"></td>
         </tr>
         <?php $i++; } ?>
@@ -128,6 +133,35 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
 <script>
+    function filter(para) { 
+        document.getElementById('content').innerHTML=para.charAt(0).toUpperCase() + para.slice(1);;
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for(let i in tr)
+        {
+            td=tr[i].getElementsByTagName("td")[7];
+            if(td){
+            txtValue = td.textContent || td.innerText;
+            if(para == "all")
+            {
+                tr[i].style.display="";
+            }
+            else if(para== "paid" && txtValue == "Paid")
+            {
+                tr[i].style.display="";     
+            }
+            else if(para== "unpaid" && (txtValue == "Partially Paid" || txtValue == "Unpaid"))
+            {
+                tr[i].style.display="";            
+            }
+            else {
+                tr[i].style.display="none";                
+            }
+        }
+            
+        }
+
+     }
     function submit(num)
     {
         var month=document.getElementById('year').value+"-"+document.getElementById('month').value;

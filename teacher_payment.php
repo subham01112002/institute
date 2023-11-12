@@ -25,7 +25,12 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Teacher List</h1>
+  <h1>Teacher Payment - <span id="content">All</span></h1>
+  <div style="display:flex;justify-content:center;gap:10px">
+    <span onclick="filter2('all')" style="cursor:pointer;">All</span>
+    <span onclick="filter2('paid')" style="cursor:pointer;">Paid</span>
+    <span onclick="filter2('unpaid')" style="cursor:pointer;">Unpaid</span>
+</div>
   <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>>January</option>
@@ -53,7 +58,7 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
 </div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
-  <table>
+  <table id="myTable">
     <thead>
         <tr>
           <th>Name</th>
@@ -107,6 +112,35 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
   crossorigin="anonymous"></script>
 
 <script>
+    function filter2(para) { 
+        document.getElementById('content').innerHTML=para.charAt(0).toUpperCase() + para.slice(1);;
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for(let i in tr)
+        {
+            td=tr[i].getElementsByTagName("td")[8];
+            if(td){
+            txtValue = td.textContent || td.innerText;
+            if(para == "all")
+            {
+                tr[i].style.display="";
+            }
+            else if(para== "paid" && txtValue == "Paid")
+            {
+                tr[i].style.display="";     
+            }
+            else if(para== "unpaid" && (txtValue == "Unpaid"))
+            {
+                tr[i].style.display="";            
+            }
+            else {
+                tr[i].style.display="none";                
+            }
+        }
+            
+        }
+
+     }
     function calc(val,i){
         
         if(val<0){
