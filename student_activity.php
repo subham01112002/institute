@@ -13,48 +13,7 @@
           $mspg = $_SESSION['id'];  
           $name = $_SESSION['name'];
           $join_date = $_SESSION['joindate'];
-          $d = date_parse_from_format("Y-m-d", $join_date);
-          
-          if($d["month"] ==1){
-            $date='Jannuary';
-          }
-          elseif($d["month"] ==2){
-            $date='February';
-          }
-          elseif($d["month"] ==3){
-            $date='March';
-          }
-          elseif($d["month"] ==4){
-            $date='April';
-          }
-          elseif($d["month"] ==5){
-            $date='May';
-          }
-          elseif($d["month"] ==6){
-            $date='June';
-          }
-          elseif($d["month"] ==7){
-            $date='July';
-          }
-          elseif($d["month"] ==8){
-            $date='August';
-          }
-          elseif($d["month"] ==9){
-            $date='September';
-          }
-          elseif($d["month"] ==10){
-            $date='October';
-          }
-          elseif($d["month"] ==11){
-            $date='November';
-          }
-          elseif($d["month"] ==12){
-            $date='December';
-          }
-          else{
-            @header("Location: index.php");
-          }
-          
+         
     $req=" SELECT * FROM  `subject_category` ORDER BY `Category_id`";
     $qut=mysqli_query($conn,$req);
 
@@ -78,8 +37,8 @@
       $res_Subjectid = $_REQUEST['Subject_id'];
       $res_Teacher_id = $_REQUEST['Teacher_id'];
       $res_Actual_fees = $_REQUEST['Actual_fees']; 
-      $res_Joining_date = $_REQUEST['Joining_date'];
-      $res_Month = $_REQUEST['Month'];
+      $res_Joining_date = $_REQUEST['Joining_date'];  
+      $res_Month = substr($res_Joining_date,0,7);
       if(!empty($_REQUEST['Status']))
       {
         $res_status = $_REQUEST['Status'];
@@ -120,7 +79,7 @@
       $res_Teacher_id = $_REQUEST['Teacher_id'];
       $res_Actual_fees = $_REQUEST['Actual_fees']; 
       $res_Joining_date = $_REQUEST['Joining_date'];
-      $res_Month = $_REQUEST['Month'];
+      $res_Month = substr($res_Joining_date,0,7);
       if(!empty($_REQUEST['Status']))
       {
         $res_status = $_REQUEST['Status'];
@@ -150,6 +109,7 @@
         {
           unset($_SESSION['id']);
           unset($_SESSION['name']);
+          unset($_SESSION['joindate']);
           session_destroy();
           @header("Location: index.php?msg=Successfull Insert");
 		      exit();   		
@@ -168,7 +128,7 @@
     <title>Document</title>
     <script language="javascript" type="text/javascript">
       
-    function showdt(){
+    /*function showdt(){
       let joindate=document.getElementById('Joining_date').value;
       let month=joindate.slice(3,6);
       let day=joindate.slice(0,3);
@@ -179,8 +139,10 @@
       const d= new date(finalized);
       let month = months[d.getMonth()];
       Month.value= month;
+      let month = joindate.substring(0,7);
+      document.paymentform.Month.focus()= month;
     
-    }
+    }*/
     function checking()
 		{
 				if(document.getElementById('Student_name').value=='')
@@ -224,12 +186,6 @@
 				{
 					alert('Please enter admission date!');
 					document.paymentform.Joining_date.focus();
-					return false;
-				}	
-        if(document.getElementById('Month').value=='')
-				{
-					alert('Please enter current month!');
-					document.paymentform.Month.focus();
 					return false;
 				}	
         
@@ -292,13 +248,8 @@
       <input class="form-control" id="Actual_fees" type="int" name="Actual_fees"/>
     </div>
     <div class="form-group">
-      <label for="joining-date">Admission Date</label>
-      <input class="form-control" id="Joining_date" type="date" name="Joining_date" value= "<?php echo $join_date ?>"oninput="showdt()"/>
-    </div>
-  
-    <div class="form-group">
-      <label for="Month">Current Month</label>
-      <input class="form-control" id="Month" type="text" name="Month" value= "<?php echo $date ?>"/>
+      <label for="joining-date">Join Date</label>
+      <input class="form-control" id="Joining_date" type="date" name="Joining_date" min= "<?php echo $join_date ?>" max="<?php echo date("Y-m-d") ?>"/>
     </div>
       
     <input type="checkbox" name="Status" id="Status" value="Y" checked />Status
