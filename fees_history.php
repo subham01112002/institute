@@ -33,7 +33,7 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
     <span onclick="filter('unpaid')" style="cursor:pointer;">Unpaid</span>
 </div>
 <div style="display:flex;justify-content:end;gap:10px">
-<select id="month" onchange="month(this.value)">
+<select id="month"  onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
 <option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if(date("m")<"2") echo "disabled"; ?>>February</option>
 <option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if(date("m")<"3") echo "disabled"; ?>>March</option>
@@ -118,7 +118,7 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
                 </td>
         <td><?php echo $arr['Fees'] ?></td>
         <td id="paid-<?php  echo $i  ?>"><?php echo $paid; ?></td>
-        <td><input type="date" class="date-<?php echo $i ?>" <?php if($lat_date){ ?> value="<?php echo $lat_date ?>" <?php } ?>></td>
+        <td><input type="date"  class="date-<?php echo $i ?>" <?php if($lat_date){ ?> value="<?php echo $lat_date ?>" <?php } ?> max="<?php echo date("Y-m-d") ?>"></td>
         <td><?php echo  $paid==0 ?  "Unpaid" : ($paid<$arr['Fees'] ?  "Partially Paid" :  "Paid"); ?></td>
         <td><input type="button" value="Submit" onclick="submit(<?php echo $i ?>)"></td>
         </tr>

@@ -96,20 +96,13 @@ if(mysqli_connect_errno()){
 					document.subjectform.Student_reg_no.focus();
 					return false;
 				}
-        if(document.getElementById('Phone_no').value=='')
-				{
-					alert('Please enter your phone no!');
-					document.subjectform.Phone_no.focus();
-					return false;
-				}
-        else if(mobile.length > 10){
+        
+        if(mobile.length != 10){
           alert('Please enter valid phone no !');
 					document.subjectform.Phone_no.focus();
 					return false;
         }
-        else{
-          alert("ok");
-        }
+        
 				if(document.getElementById('Guardian_Phone').value=='')
 				{
 					alert('Please enter Guardian phone no!');
