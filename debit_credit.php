@@ -11,7 +11,16 @@ else{
 }
 
 
-$sql=mysqli_query($conn,"SELECT * FROM expenditure WHERE `payment_month` LIKE '$curr_year-$curr_month'    ORDER BY `payment_date` DESC");
+$sql_exp=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fees AS 'expenditure',Teacher_phone AS 'phone' FROM `teacher_fees` INNER JOIN `teacher` ON `teacher_fees`.`teacher_id` = `teacher`.`Teacher_id` WHERE `month` LIKE '$curr_year-$curr_month') UNION (SELECT payment_name,payment_date,payment_amt,payment_phone FROM `expenditure`  WHERE `payment_month` LIKE '$curr_year-$curr_month') ORDER BY `date` DESC");
+
+$sql_income=mysqli_query($conn,"(SELECT Student_name AS 'name',Actual_fees AS 'money',Phone_no AS 'phone', date AS 'date' , `fees_history`.month AS 'month'  FROM `fees_history` INNER JOIN `subject_master` ON `fees_history`.`subject_id` = `subject_master`.`Subject_id` INNER JOIN   student_registration ON `student_registration`.`Student_id`=`fees_history`.`student_id` INNER JOIN  student_activity ON `student_activity`.`Student_id` = `fees_history`.`student_id` WHERE `fees_history`.`date` LIKE '$curr_year-$curr_month-%')  UNION (SELECT payment_by,payment_amt,payment_phone,payment_date,payment_month FROM `income` WHERE `payment_month` LIKE '$curr_year-$curr_month')   ORDER BY date DESC");
+
+$arr_exp=array();
+$arr_inc=array();
+while($s=mysqli_fetch_array($sql_exp))
+{
+    
+}
 
 
 ?>
@@ -28,7 +37,7 @@ $sql=mysqli_query($conn,"SELECT * FROM expenditure WHERE `payment_month` LIKE '$
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Expenditure History</h1>
+  <h1>Debit Credit</h1>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
