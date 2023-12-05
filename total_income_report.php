@@ -22,11 +22,29 @@ $sql=mysqli_query($conn,"(SELECT Student_name AS 'name',amt AS 'money',`fees_his
     <link rel = "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet"  href="student_list.css">
+    <style>
+        @media
+      only screen 
+      and (max-width: 760px), (min-device-width: 768px) 
+      and (max-device-width: 1024px)  {
+        td:nth-of-type(1):before { content: "Date"; }
+      td:nth-of-type(2):before { content: "Paid By"; }
+      td:nth-of-type(3):before { content: "Phone"; }
+      td:nth-of-type(4):before { content: "Amount"; }
+      td:nth-of-type(5):before { content: "Month"; }
+      
+    }
+    </style>
 </head>
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>All Income Report</h1>
+  <div style="display:flex;justify-content:center;gap:10px">
+    <span onclick="window.location.href='total_income_report.php'" style="cursor:pointer;">Monthly</span>
+    <span onclick="window.location.href='total_income_report_yearly.php'" style="cursor:pointer;">Yearly</span>
+    <span onclick="window.location.href='total_income_report_date.php'" style="cursor:pointer;">Date Wise</span>
+</div>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>

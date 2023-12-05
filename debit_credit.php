@@ -72,7 +72,7 @@ for($i=0;$i<max(count($arr_inc),count($arr_exp));$i++){
     <title>Document</title>
     <link rel = "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="stylesheet"  href="student_list.css">
+    <link rel="stylesheet"  href="debit-credit.css">
 </head>
 <body>
 <div class="form-box">
@@ -108,16 +108,16 @@ for($i=0;$i<max(count($arr_inc),count($arr_exp));$i++){
   <table>
     <thead>
         <tr>
-          <th data-content='Date'>Date</th>
-          <th data-content='Debit'>Debit Amount</th>
+          <th >Date</th>
+          <th >Debit Amount</th>
           <th data-content='Credit'>Credit Amount</th>
         </tr>
     </thead>
     <tbody class="scroll-pane">
         <?php for($i=0;$i<count($new_arr);$i++){  ?>
         <tr>
-        <td><?php echo isset($new_arr[$i]['date']) ? $new_arr[$i]['date']:$new_arr[$i][0]['date']  ?></td>
-        <td class="expenditure"><?php echo !is_array($new_arr[$i][0]) ? isset($new_arr[$i]['expenditure']) ? $new_arr[$i]['expenditure']:0 : $new_arr[$i][1]['expenditure'] ?></td>
+        <td data-content='Date'><?php echo isset($new_arr[$i]['date']) ? $new_arr[$i]['date']:$new_arr[$i][0]['date']  ?></td>
+        <td class="expenditure" data-content='Debit'><?php echo !is_array($new_arr[$i][0]) ? isset($new_arr[$i]['expenditure']) ? $new_arr[$i]['expenditure']:0 : $new_arr[$i][1]['expenditure'] ?></td>
         <td class="income"><?php echo !is_array($new_arr[$i][0]) ? isset($new_arr[$i]['money']) ? $new_arr[$i]['money']: 0 : $new_arr[$i][0]['money'] ?></td>
         </tr>
         <?php } ?>
@@ -133,7 +133,7 @@ for($i=0;$i<max(count($arr_inc),count($arr_exp));$i++){
             </td>
         </tr>
         <tr>
-            <td></td>
+            <td>Status</td>
             <td class="p-l"></td>
             <td  class='deb-cred'></td>
         </tr>
@@ -160,7 +160,7 @@ for($i=0;$i<max(count($arr_inc),count($arr_exp));$i++){
     document.getElementsByClassName('total_exp')[0].innerHTML=expenditure;
     document.getElementsByClassName('total_inc')[0].innerHTML=income;
     
-    document.getElementsByClassName('p-l')[0].innerHTML=income>expenditure ? "Profile" : "Loss";
+    document.getElementsByClassName('p-l')[0].innerHTML=income>expenditure ? "Profit" : "Loss";
     
     document.getElementsByClassName('deb-cred')[0].innerHTML=Math.abs(income-expenditure);
     if(income>expenditure){

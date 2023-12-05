@@ -1,17 +1,17 @@
 <?php 
 include("conn.php");
 
-if(empty($_REQUEST['month'])){
-    $curr_month=date("m");
-    $curr_year=date("Y");
+if(empty($_REQUEST['mode'])){
+    $curr_date=date("Y-m-01");
+    $curr_edate=date("Y-m-t");
 }
 else{
-    $curr_month=$_REQUEST['month'];
-    $curr_year=$_REQUEST['year'];
+    $curr_date=$_REQUEST['date'];
+    $curr_edate=$_REQUEST['edate'];
 }
 
 
-$sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fees AS 'expenditure',Teacher_phone AS 'phone' FROM `teacher_fees` INNER JOIN `teacher` ON `teacher_fees`.`teacher_id` = `teacher`.`Teacher_id` WHERE `date` LIKE '$curr_year-$curr_month-%') UNION (SELECT payment_name,payment_date,payment_amt,payment_phone FROM `expenditure`  WHERE `payment_date` LIKE '$curr_year-$curr_month-%') ORDER BY `date` DESC");
+$sql=mysqli_query($conn,"(SELECT Student_name AS 'name',amt AS 'money',`fees_history`.`fees_id` AS 'id', date AS 'date' , `fees_history`.month AS 'month',Phone_No as 'Phone'  FROM `fees_history` INNER JOIN `subject_master` ON `fees_history`.`subject_id` = `subject_master`.`Subject_id` INNER JOIN   student_registration ON `student_registration`.`Student_id`=`fees_history`.`student_id` INNER JOIN  student_activity ON `student_activity`.`Subject_id` = `fees_history`.`subject_id` WHERE `fees_history`.`date` BETWEEN '$curr_date' AND '$curr_edate')UNION (SELECT payment_by,payment_amt,income_id,payment_date,payment_month,payment_phone FROM `income` WHERE `payment_date` BETWEEN '$curr_date' AND '$curr_edate' ) ORDER BY date DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +31,7 @@ $sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fe
       td:nth-of-type(2):before { content: "Paid By"; }
       td:nth-of-type(3):before { content: "Phone"; }
       td:nth-of-type(4):before { content: "Amount"; }
+      td:nth-of-type(5):before { content: "Month"; }
       
     }
     </style>
@@ -38,47 +39,31 @@ $sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fe
 <body>
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>Expenditure Report</h1>
+  <h1>All Income Report</h1>
   <div style="display:flex;justify-content:center;gap:10px">
-    <span onclick="window.location.href='total_expen_report.php'" style="cursor:pointer;">Monthly</span>
-    <span onclick="window.location.href='total_expen_report_yearly.php'" style="cursor:pointer;">Yearly</span>
-    <span onclick="window.location.href='total_expen_report_date.php'" style="cursor:pointer;">Date Wise</span>
-</div>
-
-<div style="display:flex;justify-content:end;gap:10px">
-<select id="month" onchange="month(this.value)">
-<option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
-<option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if(date("m")<"2") echo "disabled"; ?>>February</option>
-<option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if(date("m")<"3") echo "disabled"; ?>>March</option>
-<option value="04" <?php if($curr_month=="4") echo "selected"; ?>  <?php if(date("m")<"4") echo "disabled"; ?>>April</option>
-<option value="05" <?php if($curr_month=="5") echo "selected"; ?>  <?php if(date("m")<"5") echo "disabled"; ?>>May</option>
-<option value="06" <?php if($curr_month=="6") echo "selected"; ?>  <?php if(date("m")<"6") echo "disabled"; ?>>June</option>
-<option value="07" <?php if($curr_month=="7") echo "selected"; ?>  <?php if(date("m")<"7") echo "disabled"; ?>>July</option>
-<option value="08" <?php if($curr_month=="8") echo "selected"; ?>  <?php if(date("m")<"8") echo "disabled"; ?>>August</option>
-<option value="09" <?php if($curr_month=="9") echo "selected"; ?> <?php if(date("m")<"9") echo "disabled"; ?>>September</option>
-<option value="10" <?php if($curr_month=="10") echo "selected"; ?> <?php if(date("m")<"10") echo "disabled"; ?>>October</option>
-<option value="11" <?php if($curr_month=="11") echo "selected"; ?>  <?php if(date("m")<"11") echo "disabled"; ?>>November</option>
-<option value="12" <?php if($curr_month=="12") echo "selected"; ?> <?php if(date("m")<"12") echo "disabled"; ?>>December</option>
-
-</select>
-<select id="year" onchange="year(this.value)">
-   
-<?php for($i=date("Y");$i>=2010;$i--){ ?>
-    
-    <option value="<?php echo $i; ?>" <?php if($curr_year==$i) echo "selected" ?>><?php echo $i; ?></option>
-    <?php } ?>
-   
-</select>
+    <span onclick="window.location.href='total_income_report.php'" style="cursor:pointer;">Monthly</span>
+    <span onclick="window.location.href='total_income_report_yearly.php'" style="cursor:pointer;">Yearly</span>
+    <span onclick="window.location.href='total_income_report_date.php'" style="cursor:pointer;">Date Wise</span>
+  </div>
+<div style="display:flex;justify-content:end;gap:20px">
+<form>
+    <input type="hidden" name="mode" value='1'>
+        <input type="date" name="date" value='<?php echo $curr_date ?>'>
+        To
+        <input type="date" name="edate" value='<?php echo $curr_edate ?>'>
+        <input type="submit" >
+</form>
 </div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
     <thead>
         <tr>
-          <th>Date</th>
-          <th>Paid by</th>
+          <th>Payment Date</th>
+          <th>Paid By</th>
           <th>Phone number</th>
           <th>Amount</th>
+          <th>Paid Month</th>
         </tr>
     </thead>
     <tbody class="scroll-pane">
@@ -87,10 +72,12 @@ $sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fe
              while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
             
-        <td><?php echo $arr['date'] ?></td>
+        <td><input type="date" value="<?php echo $arr['date'] ?>" disabled></td>
         <td><?php echo $arr['name'] ?></td>
-        <td><?php echo $arr['phone'] ?></td>
-        <td><?php echo $arr['expenditure'] ?></td>
+        <td><?php echo $arr['Phone'] ?></td>
+        <td><?php echo $arr['money'] ?></td>
+        <td><input type="month" value="<?php echo $arr['month'] ?>" disabled></td>
+        
         </tr>
         <?php $i++; } ?>
         
@@ -105,11 +92,11 @@ $sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fe
 <script>
     function month(val){
 
-window.location.href="total_expen_report.php?month="+val+"&year="+document.getElementById('year').value;
+window.location.href="total_income_report.php?month="+val+"&year="+document.getElementById('year').value;
 }
 function year(val){
 
-window.location.href="total_expen_report.php?month="+document.getElementById('month').value+"&year="+val;
+window.location.href="total_income_report.php?month="+document.getElementById('month').value+"&year="+val;
 }
 
 

@@ -140,8 +140,8 @@ input[type=number]::-webkit-outer-spin-button {
           td:nth-of-type(3):before { content: "Total Renumeration"; }
 
           td:nth-of-type(4):before { content: "Percentage"; }
-          td:nth-of-type(5):before { content: "Actual Renumration"; }
-          td:nth-of-type(6):before { content: "Renumration"; }
+          td:nth-of-type(5):before { content: "Actual Renumeration"; }
+          td:nth-of-type(6):before { content: "Renumeration"; }
           td:nth-of-type(7):before { content: "Date"; }
           td:nth-of-type(8):before { content: "Paid By"; }
           td:nth-of-type(9):before { content: "Status"; }
