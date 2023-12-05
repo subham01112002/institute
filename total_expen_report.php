@@ -11,7 +11,7 @@ else{
 }
 
 
-$sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fees AS 'expenditure',Teacher_phone AS 'phone' FROM `teacher_fees` INNER JOIN `teacher` ON `teacher_fees`.`teacher_id` = `teacher`.`Teacher_id` WHERE `month` LIKE '$curr_year-$curr_month') UNION (SELECT payment_name,payment_date,payment_amt,payment_phone FROM `expenditure`  WHERE `payment_month` LIKE '$curr_year-$curr_month') ORDER BY `date` DESC");
+$sql=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fees AS 'expenditure',Teacher_phone AS 'phone' FROM `teacher_fees` INNER JOIN `teacher` ON `teacher_fees`.`teacher_id` = `teacher`.`Teacher_id` WHERE `date` LIKE '$curr_year-$curr_month-%') UNION (SELECT payment_name,payment_date,payment_amt,payment_phone FROM `expenditure`  WHERE `payment_date` LIKE '$curr_year-$curr_month-%') ORDER BY `date` DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">

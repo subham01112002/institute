@@ -2,6 +2,10 @@
 include("conn.php");
 $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' ORDER BY `Student_id` DESC");
 
+if(isset($_REQUEST['mode'])){
+    $name=$_REQUEST['search'];
+    $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' AND `Student_name` LIKE '%$name%' ORDER BY `Student_id` DESC");
+}
 
 ?>
 <!DOCTYPE html>
@@ -18,7 +22,14 @@ $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' OR
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>Student List</h1>
+  <div style="display:flex;justify-content:end;gap:10px">
+  <form>
+    <input type="hidden" name="mode" value="1">
+    <input type="search" name="search" value="<?php if(isset($name)) echo $name; ?>" placeholder="Search By Name">
+    <input type="submit">
 
+  </form>
+   </div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
@@ -40,7 +51,7 @@ $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='Y' OR
         
         <?php  while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
-        <td><?php echo $arr['Student_name'] ?></td>
+        <td style="cursor:pointer" onclick="window.location.href='student_list_details.php?id=<?php echo $arr['Student_id'] ?>'"><?php echo $arr['Student_name'] ?></td>
         <td><?php echo $arr['Student_reg_no'] ?></td>
         <td><?php echo $arr['Phone_no'] ?></td>
         <td><?php echo $arr['Class'] ?></td>

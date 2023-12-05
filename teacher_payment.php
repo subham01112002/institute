@@ -9,7 +9,23 @@ else{
     $curr_year=$_REQUEST['year'];
 }
 $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,COUNT(DISTINCT `Student_id`) AS 'Students',SUM(`Actual_fees`) AS 'Fees' FROM `student_activity` RIGHT  JOIN `teacher` ON `teacher`.`Teacher_id`=`student_activity`.`Teacher_id` GROUP BY `teacher`.`Teacher_id` ORDER BY  COUNT(DISTINCT `Student_id`) DESC") ;
+if(isset($_REQUEST['mode'])){
+    $name=$_REQUEST['search'];
+    $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,COUNT(DISTINCT `Student_id`) AS 'Students',SUM(`Actual_fees`) AS 'Fees' FROM `student_activity` RIGHT  JOIN `teacher` ON `teacher`.`Teacher_id`=`student_activity`.`Teacher_id` WHERE `teacher`.`Teacher_name` LIKE '%$name%' GROUP BY `teacher`.`Teacher_id` ORDER BY  COUNT(DISTINCT `Student_id`) DESC");
 
+}
+if(isset($_REQUEST['search'])){
+    $name=$_REQUEST['search'];
+    $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,COUNT(DISTINCT `Student_id`) AS 'Students',SUM(`Actual_fees`) AS 'Fees' FROM `student_activity` RIGHT  JOIN `teacher` ON `teacher`.`Teacher_id`=`student_activity`.`Teacher_id` WHERE `teacher`.`Teacher_name` LIKE '%$name%' GROUP BY `teacher`.`Teacher_id` ORDER BY  COUNT(DISTINCT `Student_id`) DESC");
+
+}
+
+if(isset($_REQUEST['show'])){
+    $show=$_REQUEST['show'];
+}
+else{
+    $show="";
+}
 
 ?>
 <!DOCTYPE html>
@@ -27,10 +43,21 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>Teacher Payment - <span id="content">All</span></h1>
   <div style="display:flex;justify-content:center;gap:10px">
-    <span onclick="filter2('all')" style="cursor:pointer;">All</span>
-    <span onclick="filter2('paid')" style="cursor:pointer;">Paid</span>
-    <span onclick="filter2('unpaid')" style="cursor:pointer;">Unpaid</span>
+  <span onclick="window.location.href='teacher_payment.php'" style="cursor:pointer;">All</span>
+    <span onclick="window.location.href='teacher_payment.php?show=paid'" style="cursor:pointer;">Paid</span>
+    <span onclick="window.location.href='teacher_payment.php?show=unpaid'" style="cursor:pointer;">Unpaid</span>
+    <i class="fa fa-download" aria-hidden="true" style="font-size:larger;color:blueviolet;cursor:pointer" onclick="generate()"></i>
+
 </div>
+<div style="display:flex;justify-content:end;gap:10px;margin-bottom: 15px">
+  <form>
+    <input type="hidden" name="mode" value="1">
+    <input type="search" name="search" value="<?php if(isset($name)) echo $name; ?>" placeholder="Search By Name">
+    <input type="submit" >
+
+  </form>
+   </div>
+
   <div style="display:flex;justify-content:end;gap:10px">
 <select id="month" onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>>January</option>
@@ -57,7 +84,8 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
 </select>
 </div>
 <div id="DataTable">
-  <div id="table_box_bootstrap"></div>
+<div id="table_box_bootstrap"></div>
+  
   <table id="myTable">
     <thead>
         <tr>
@@ -75,14 +103,17 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
     </thead>
     <tbody class="scroll-pane">
         
-        <?php $i=0; while($arr=mysqli_fetch_array($sql)){?> 
+        <?php $i=0; while($arr=mysqli_fetch_array($sql)){?>
+            <?php $teacher_id=$arr['id']; 
+        $fees_sql=mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `teacher_fees` WHERE `teacher_id`='$teacher_id' AND `month` LIKE '$curr_year-$curr_month'"));
+        if(($show=="paid" && $fees_sql) || ($show=="unpaid" && !$fees_sql) || ($show=="")){
+        ?>
+         
         <tr>
         <td data-teacher="<?php echo $arr['id']; ?>" id="teach_id-<?php echo $i; ?>"><?php echo $arr['Teacher_name'] ?></td>
         <td><?php echo $arr['Students']    ?></td>
 
         <td id="fees-<?php echo $i ?>"><?php echo $arr['Fees'] ?$arr['Fees']: "N/A"  ?></td>
-        <?php $teacher_id=$arr['id']; 
-        $fees_sql=mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM `teacher_fees` WHERE `teacher_id`='$teacher_id' AND `month` LIKE '$curr_year-$curr_month'")); ?>
         <td><input type="number" id="percent-<?php echo $i; ?>" <?php if($fees_sql){ ?>
             value="<?php echo $fees_sql['percentage']?>" disabled
         <?php } ?> onkeyup="calc(this.value,<?php echo $i; ?>)"></td>
@@ -100,7 +131,7 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
         <td><?php echo $fees_sql? "Paid" :"Unpaid"; ?></td>
         <td><input type="button" id="submit-<?php echo $i; ?>" value="Submit" <?php echo !$arr['Fees'] ? "disabled": "" ?> <?php if($fees_sql) echo "disabled" ?> onclick="sub(<?php echo $i; ?>)"></td>
         </tr>
-        <?php $i++; } ?>
+        <?php $i++; } } ?>
         
   </tbody>
 </table>
@@ -111,7 +142,31 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+    function generate(){
+        var doc = new jsPDF("p", "mm", "a4");
+        html2canvas(document.querySelector('#myTable')).then(function(canvas){
+        var imgData = canvas.toDataURL('image/png');
+        var pageHeight = 295;  
+        var imgWidth = (canvas.width * 36.3) / 210 ; 
+        var imgHeight = canvas.height * imgWidth *1.2 / canvas.width;
+        var heightLeft = imgHeight;
+        var position = 15;
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                doc.addPage();
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight; 
+            }
+            doc.save(Date.now()+'_teacher_report-<?php echo $curr_month."-".$curr_year; ?>'+'.pdf');
+        });
+            }
+    
     function filter2(para) { 
         document.getElementById('content').innerHTML=para.charAt(0).toUpperCase() + para.slice(1);;
         table = document.getElementById("myTable");
@@ -150,13 +205,14 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
             val=100;
          }
          document.getElementById('actual-'+i).innerHTML = document.getElementById('fees-'+i).innerHTML!=="N/A" ? Number(document.getElementById('fees-'+i).innerHTML)*Number(val)/100 : "N/A";
+         document.getElementById('renum-'+i).value = document.getElementById('fees-'+i).innerHTML!=="N/A" ? Number(document.getElementById('fees-'+i).innerHTML)*Number(val)/100 : "0";
     }
     function sub(i)
     {
         let id=document.getElementById('teach_id-'+i).dataset.teacher;
         let fees=document.getElementById('fees-'+i).innerHTML;
         let percent=document.getElementById('percent-'+i).value;
-        let renum=document.getElementById('renum-'+i).innerHTML;
+        let renum=document.getElementById('renum-'+i).value;
         let date=document.getElementById('date-'+i).value;
         let paid=document.getElementById('paid-'+i).value;
         if(date=="")
@@ -185,11 +241,11 @@ $sql=mysqli_query($conn,"SELECT `teacher`.`Teacher_id` AS 'id',`Teacher_name`,CO
     }
     function month(val){
 
-window.location.href="teacher_payment.php?month="+val+"&year="+document.getElementById('year').value;
+window.location.href="teacher_payment.php?month="+val+"&year="+document.getElementById('year').value+"&search=<?php if(isset($name)) echo $name;  ?>";
 }
 function year(val){
 
-window.location.href="teacher_payment.php?month="+document.getElementById('month').value+"&year="+val;
+window.location.href="teacher_payment.php?month="+document.getElementById('month').value+"&year="+val+"&search=<?php if(isset($name)) echo $name;  ?>";
 }
 
     var box = paginator({

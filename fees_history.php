@@ -9,9 +9,24 @@ else{
     $curr_month=$_REQUEST['month'];
     $curr_year=$_REQUEST['year'];
 }
-$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31'  GROUP BY `student_activity`.`Student_id`");
+$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'   GROUP BY `student_activity`.`Student_id`");
 
+if(isset($_REQUEST['mode'])){
+    $name=$_REQUEST['search'];
+    $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y' AND `student_registration`.`Student_name` LIKE '%$name%'    GROUP BY `student_activity`.`Student_id`");
 
+}
+if(isset($_REQUEST['search'])){
+    $name=$_REQUEST['search'];
+    $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y' AND `student_registration`.`Student_name` LIKE '%$name%'    GROUP BY `student_activity`.`Student_id`");
+
+}
+if(isset($_REQUEST['show'])){
+    $show=$_REQUEST['show'];
+}
+else{
+    $show="";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,11 +42,21 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>Fees History - <span id="content">All</span></h1>
+  
   <div style="display:flex;justify-content:center;gap:10px">
-    <span onclick="filter('all')" style="cursor:pointer;">All</span>
-    <span onclick="filter('paid')" style="cursor:pointer;">Paid</span>
-    <span onclick="filter('unpaid')" style="cursor:pointer;">Unpaid</span>
+    <span onclick="window.location.href='fees_history.php'" style="cursor:pointer;">All</span>
+    <span onclick="window.location.href='fees_history.php?show=paid'" style="cursor:pointer;">Paid</span>
+    <span onclick="window.location.href='fees_history.php?show=unpaid'" style="cursor:pointer;">Unpaid</span>
+    <i class="fa fa-download" aria-hidden="true" style="font-size:larger;color:blueviolet;cursor:pointer" onclick="generate()"></i>
 </div>
+<div style="display:flex;justify-content:end;gap:10px;margin-bottom: 15px">
+  <form>
+    <input type="hidden" name="mode" value="1">
+    <input type="search" name="search" value="<?php if(isset($name)) echo $name; ?>" placeholder="Search By Name">
+    <input type="submit" >
+
+  </form>
+   </div>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month"  onchange="month(this.value)">
 <option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
@@ -77,11 +102,12 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
     <tbody class="scroll-pane">
         
         <?php $i=0;  while($arr=mysqli_fetch_array($sql)){?> 
-        <tr>
             <?php
-            $paid=0;
+                $paid=0;
             $id=$arr['id'];
-            $query=mysqli_query($conn,"SELECT * FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'");
+            
+            $subject_1=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'");
+            $query_1=mysqli_query($conn,"SELECT * FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'");
             $lat_date=mysqli_fetch_array(mysqli_query($conn,"SELECT MAX(date) AS 'date' FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'"));
             if($lat_date)
             {
@@ -89,15 +115,28 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
             }
             
             $arr_it=array();
-            while($fees=mysqli_fetch_array($query))
+            while($fees_1=mysqli_fetch_array($query_1))
             {
-                array_push($arr_it,$fees['subject_id']);
+                array_push($arr_it,$fees_1['subject_id']);
             }
+  
+            while($sub25=mysqli_fetch_array($subject_1)){
+                if(in_array($sub25['Subject_id'] ,$arr_it))
+                $paid+=$sub25['Actual_fees'];
+            }
+            
+        
             ?>
+        <?php if($show=="" || ($show=="unpaid" && $paid<$arr['Fees']) || ($show=="paid" && $paid==$arr['Fees']) ){ ?>
+        <tr>
+            <?php
+            $paid=0;
+            $id=$arr['id'];
+                      ?>
         <td  id="id-<?php echo $i ?>" data-id="<?php echo $arr['id']; ?>"><a href='fees_details.php?id=<?php echo $arr['id']; ?>' style="text-decoration:none;color:black"><?php echo $arr['Student_name'] ?></a></td>
         <td><?php echo $arr['Student_reg_no'] ?></td>
         <?php 
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
+        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'");
         ?>
         
         <td>
@@ -108,7 +147,7 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
                 
         </td>
         <td><?php
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id'");
+        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'");
          ?>
          <input type="checkbox" class="fees_all-<?php echo $i ?>" onclick="select_all(<?php echo $i ?>)" value="<?php echo $arr['Fees'] ?>"> Select All <br> 
         <?php
@@ -122,7 +161,7 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
         <td><?php echo  $paid==0 ?  "Unpaid" : ($paid<$arr['Fees'] ?  "Partially Paid" :  "Paid"); ?></td>
         <td><input type="button" value="Submit" onclick="submit(<?php echo $i ?>)"></td>
         </tr>
-        <?php $i++; } ?>
+        <?php $i++; }  } ?>
         
   </tbody>
 </table>
@@ -132,11 +171,42 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+    function generate(){
+        var doc = new jsPDF("p", "mm", "a4");
+        html2canvas(document.querySelector('#myTable')).then(function(canvas){
+        var imgData = canvas.toDataURL('image/png');
+        var pageHeight = 295;  
+        var imgWidth = (canvas.width * 60) / 210 ; 
+        var imgHeight = canvas.height * imgWidth / canvas.width;
+        var heightLeft = imgHeight;
+        var position = 15;
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                doc.addPage();
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight; 
+            }
+            doc.save(Date.now()+'_fees_report-<?php echo $curr_month."-".$curr_year; ?>'+'.pdf');
+        });
+            }
     function filter(para) { 
         document.getElementById('content').innerHTML=para.charAt(0).toUpperCase() + para.slice(1);;
         table = document.getElementById("myTable");
         tr = table.getElementsByTagName("tr");
+        if(para!='all'){
+            document.getElementsByClassName("records")[0].value=0;
+        }
+        else{
+            document.getElementsByClassName("records")[0].value=10;
+            
+        }
         for(let i in tr)
         {
             td=tr[i].getElementsByTagName("td")[7];
@@ -190,11 +260,11 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
     }
     function month(val){
 
-        window.location.href="fees_history.php?month="+val+"&year="+document.getElementById('year').value;
+        window.location.href="fees_history.php?month="+val+"&year="+document.getElementById('year').value+"&search=<?php if(isset($name)) echo $name;  ?>";
     }
     function year(val){
 
-    window.location.href="fees_history.php?month="+document.getElementById('month').value+"&year="+val;
+    window.location.href="fees_history.php?month="+document.getElementById('month').value+"&year="+val+"&search=<?php if(isset($name)) echo $name;  ?>";
     }
     function select_all(num) { 
         var sum=0;
@@ -213,7 +283,7 @@ $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student
         else{
         for(let i of document.getElementsByClassName('fees-'+num))
         {
-            if(!i.disabled){
+            if(!i.disabled & i.checked){
             i.checked=false;
             
             sum-=i.value;

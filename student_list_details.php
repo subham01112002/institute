@@ -1,17 +1,11 @@
 <?php 
 include("conn.php");
+$id=$_REQUEST['id'];
+$sql=mysqli_query($conn,"SELECT `Subject_name`,`Joining_date`,`Actual_fees`,`Teacher_name`,`student_activity`.`Status`,`Activity_id` FROM `student_activity` INNER JOIN `teacher` ON  `teacher`.`Teacher_id` = `student_activity`.`Teacher_id` INNER JOIN `subject_master` ON `subject_master`.`Subject_id`=`student_activity`.`Subject_id`  WHERE `Student_id`='$id'");
 
-if(empty($_REQUEST['month'])){
-    $curr_month=date("m");
-    $curr_year=date("Y");
-}
-else{
-    $curr_month=$_REQUEST['month'];
-    $curr_year=$_REQUEST['year'];
-}
+$name=mysqli_query($conn,"SELECT * FROM `student_registration` WHERE `Student_id`='$id'");
+$name_arr=mysqli_fetch_array($name);
 
-
-$sql=mysqli_query($conn,"(SELECT Student_name AS 'name',amt AS 'money',`fees_history`.`fees_id` AS 'id', date AS 'date' , `fees_history`.month AS 'month',Phone_No as 'Phone'  FROM `fees_history` INNER JOIN `subject_master` ON `fees_history`.`subject_id` = `subject_master`.`Subject_id` INNER JOIN   student_registration ON `student_registration`.`Student_id`=`fees_history`.`student_id` INNER JOIN  student_activity ON `student_activity`.`Subject_id` = `fees_history`.`subject_id` WHERE `fees_history`.`date` LIKE '$curr_year-$curr_month-%')UNION (SELECT payment_by,payment_amt,income_id,payment_date,payment_month,payment_phone FROM `income` WHERE `payment_month` LIKE '$curr_year-$curr_month') ORDER BY date DESC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,59 +19,32 @@ $sql=mysqli_query($conn,"(SELECT Student_name AS 'name',amt AS 'money',`fees_his
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1>All Income Report</h1>
-<div style="display:flex;justify-content:end;gap:10px">
-<select id="month" onchange="month(this.value)">
-<option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
-<option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if(date("m")<"2") echo "disabled"; ?>>February</option>
-<option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if(date("m")<"3") echo "disabled"; ?>>March</option>
-<option value="04" <?php if($curr_month=="4") echo "selected"; ?>  <?php if(date("m")<"4") echo "disabled"; ?>>April</option>
-<option value="05" <?php if($curr_month=="5") echo "selected"; ?>  <?php if(date("m")<"5") echo "disabled"; ?>>May</option>
-<option value="06" <?php if($curr_month=="6") echo "selected"; ?>  <?php if(date("m")<"6") echo "disabled"; ?>>June</option>
-<option value="07" <?php if($curr_month=="7") echo "selected"; ?>  <?php if(date("m")<"7") echo "disabled"; ?>>July</option>
-<option value="08" <?php if($curr_month=="8") echo "selected"; ?>  <?php if(date("m")<"8") echo "disabled"; ?>>August</option>
-<option value="09" <?php if($curr_month=="9") echo "selected"; ?> <?php if(date("m")<"9") echo "disabled"; ?>>September</option>
-<option value="10" <?php if($curr_month=="10") echo "selected"; ?> <?php if(date("m")<"10") echo "disabled"; ?>>October</option>
-<option value="11" <?php if($curr_month=="11") echo "selected"; ?>  <?php if(date("m")<"11") echo "disabled"; ?>>November</option>
-<option value="12" <?php if($curr_month=="12") echo "selected"; ?> <?php if(date("m")<"12") echo "disabled"; ?>>December</option>
+  <h1><a href="student_list.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
+  <h1><?php echo $name_arr['Student_name']; ?> </h1>
 
-</select>
-<select id="year" onchange="year(this.value)">
-   
-<?php for($i=date("Y");$i>=2010;$i--){ ?>
-    
-    <option value="<?php echo $i; ?>" <?php if($curr_year==$i) echo "selected" ?>><?php echo $i; ?></option>
-    <?php } ?>
-   
-</select>
-</div>
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
   <table>
     <thead>
         <tr>
-          <th>Payment Date</th>
-          <th>Paid By</th>
-          <th>Phone number</th>
-          <th>Amount</th>
-          <th>Paid Month</th>
-        </tr>
+          <th>Subject</th>
+          <th>Joining Date</th>
+          <th>Fees</th>
+          <th>Teacher</th>
+          <th>Status</th>
+            </tr>
     </thead>
     <tbody class="scroll-pane">
         
-        <?php $i=0; 
-             while($arr=mysqli_fetch_array($sql)){?> 
+        <?php  while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
-            
-        <td><input type="date" value="<?php echo $arr['date'] ?>" disabled></td>
-        <td><?php echo $arr['name'] ?></td>
-        <td><?php echo $arr['Phone'] ?></td>
-        <td><?php echo $arr['money'] ?></td>
-        <td><input type="month" value="<?php echo $arr['month'] ?>" disabled></td>
-        
+            <td><?php echo $arr['Subject_name'];  ?></td>
+            <td><?php echo $arr['Joining_date'];  ?></td>
+            <td><?php echo $arr['Actual_fees'];  ?></td>
+            <td><?php echo $arr['Teacher_name'];  ?></td>
+            <td><input type="checkbox" onclick="window.location.href='sub_status.php?id=<?php echo $arr['Activity_id'] ?>&status=<?php echo $arr['Status'] ?>'" <?php if($arr['Status']=='Y') echo "checked" ?>></td>
         </tr>
-        <?php $i++; } ?>
+        <?php } ?>
         
   </tbody>
 </table>
@@ -87,16 +54,9 @@ $sql=mysqli_query($conn,"(SELECT Student_name AS 'name',amt AS 'money',`fees_his
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
+
 <script>
-    function month(val){
-
-window.location.href="total_income_report.php?month="+val+"&year="+document.getElementById('year').value;
-}
-function year(val){
-
-window.location.href="total_income_report.php?month="+document.getElementById('month').value+"&year="+val;
-}
-
+    
 
 
     var box = paginator({
@@ -105,6 +65,8 @@ window.location.href="total_income_report.php?month="+document.getElementById('m
 });
 box.className = "box";
 document.getElementById("table_box_bootstrap").appendChild(box);
+
+
 /*****************************************************
  * Paginator Function                                *
  *****************************************************

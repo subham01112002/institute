@@ -11,15 +11,55 @@ else{
 }
 
 
-$sql_exp=mysqli_query($conn,"(SELECT Teacher_name AS 'name',date AS 'date',actual_fees AS 'expenditure',Teacher_phone AS 'phone' FROM `teacher_fees` INNER JOIN `teacher` ON `teacher_fees`.`teacher_id` = `teacher`.`Teacher_id` WHERE `month` LIKE '$curr_year-$curr_month') UNION (SELECT payment_name,payment_date,payment_amt,payment_phone FROM `expenditure`  WHERE `payment_month` LIKE '$curr_year-$curr_month') ORDER BY `date` DESC");
+$sql_exp=mysqli_query($conn,"SELECT SUM(expenditure) AS 'expenditure',name,date,phone FROM ((SELECT Teacher_name AS 'name',date AS 'date',actual_fees AS 'expenditure',Teacher_phone AS 'phone' FROM `teacher_fees` INNER JOIN `teacher` ON `teacher_fees`.`teacher_id` = `teacher`.`Teacher_id` WHERE `date` LIKE '$curr_year-$curr_month-%') UNION (SELECT payment_name,payment_date,payment_amt,payment_phone FROM `expenditure`  WHERE `payment_date` LIKE '$curr_year-$curr_month-%')) AS A GROUP BY date ORDER BY `date` DESC");
 
-$sql_income=mysqli_query($conn,"(SELECT Student_name AS 'name',Actual_fees AS 'money',Phone_no AS 'phone', date AS 'date' , `fees_history`.month AS 'month'  FROM `fees_history` INNER JOIN `subject_master` ON `fees_history`.`subject_id` = `subject_master`.`Subject_id` INNER JOIN   student_registration ON `student_registration`.`Student_id`=`fees_history`.`student_id` INNER JOIN  student_activity ON `student_activity`.`Student_id` = `fees_history`.`student_id` WHERE `fees_history`.`date` LIKE '$curr_year-$curr_month-%')  UNION (SELECT payment_by,payment_amt,payment_phone,payment_date,payment_month FROM `income` WHERE `payment_month` LIKE '$curr_year-$curr_month')   ORDER BY date DESC");
+$sql_income=mysqli_query($conn,"SELECT SUM(money) AS 'money',name,date,phone FROM ((SELECT Student_name AS 'name',Actual_fees AS 'money',Phone_no AS 'phone', date AS 'date' , `fees_history`.month AS 'month'  FROM `fees_history` INNER JOIN `subject_master` ON `fees_history`.`subject_id` = `subject_master`.`Subject_id` INNER JOIN   student_registration ON `student_registration`.`Student_id`=`fees_history`.`student_id` INNER JOIN  student_activity ON `student_activity`.`Student_id` = `fees_history`.`student_id` WHERE `fees_history`.`date` LIKE '$curr_year-$curr_month-%')  UNION (SELECT payment_by,payment_amt,payment_phone,payment_date,payment_month FROM `income` WHERE `payment_date` LIKE '$curr_year-$curr_month-%')) AS A GROUP BY date   ORDER BY date DESC");
 
 $arr_exp=array();
 $arr_inc=array();
 while($s=mysqli_fetch_array($sql_exp))
 {
+    array_push($arr_exp,$s);
+}
+while($q=mysqli_fetch_array($sql_income))
+{
+    array_push($arr_inc,$q);
+}
+// Define a custom comparison function
+function compareDates($a, $b) {
+    $dateA = strtotime($a['date']);
+    $dateB = strtotime($b['date']);
     
+    if ($dateA == $dateB) {
+       return 0;
+    } elseif ($dateA > $dateB) {
+       return 1;
+    } else {
+       return -1;
+    }
+ }
+ 
+ // Sort the multidimensional array using the custom comparison function
+ usort($arr_inc, 'compareDates');
+ usort($arr_exp, 'compareDates');
+ $new_arr=array();
+for($i=0;$i<max(count($arr_inc),count($arr_exp));$i++){
+    if(isset($arr_inc[$i]) && isset($arr_exp[$i]))
+    {
+        if(strtotime($arr_inc[$i]['date'])< strtotime($arr_inc[$i]['date']))
+        array_push($new_arr,$arr_inc[$i]);
+        else if(strtotime($arr_inc[$i]['date'])>strtotime($arr_inc[$i]['date']))
+        array_push($new_arr,$arr_exp[$i]);
+        else
+        array_push($new_arr,[$arr_inc[$i],$arr_exp[$i]]);
+    }
+    else if(isset($arr_inc[$i]))
+    {
+        array_push($new_arr,$arr_inc[$i]); 
+    }
+    else{
+        array_push($new_arr,$arr_exp[$i]); 
+    }
 }
 
 
@@ -74,9 +114,29 @@ while($s=mysqli_fetch_array($sql_exp))
         </tr>
     </thead>
     <tbody class="scroll-pane">
-        
-        
-        
+        <?php for($i=0;$i<count($new_arr);$i++){  ?>
+        <tr>
+        <td><?php echo isset($new_arr[$i]['date']) ? $new_arr[$i]['date']:$new_arr[$i][0]['date']  ?></td>
+        <td class="expenditure"><?php echo !is_array($new_arr[$i][0]) ? isset($new_arr[$i]['expenditure']) ? $new_arr[$i]['expenditure']:0 : $new_arr[$i][1]['expenditure'] ?></td>
+        <td class="income"><?php echo !is_array($new_arr[$i][0]) ? isset($new_arr[$i]['money']) ? $new_arr[$i]['money']: 0 : $new_arr[$i][0]['money'] ?></td>
+        </tr>
+        <?php } ?>
+        <tr>
+            <td>
+                Total :
+            </td>
+            <td class='total_exp'>
+
+            </td>
+            <td class="total_inc">
+
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="p-l"></td>
+            <td  class='deb-cred'></td>
+        </tr>
   </tbody>
 </table>
 </div>
@@ -86,6 +146,34 @@ while($s=mysqli_fetch_array($sql_exp))
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
 <script>
+    var income=0;
+    ;
+    for(let i=0;i<document.getElementsByClassName('income').length;i++)
+    {
+        income+=Number(document.getElementsByClassName('income')[i].innerHTML);        
+    }
+    var expenditure=0;
+    for(let i=0;i<document.getElementsByClassName('expenditure').length;i++)
+    {
+        expenditure+=Number(document.getElementsByClassName('expenditure')[i].innerHTML);        
+    }
+    document.getElementsByClassName('total_exp')[0].innerHTML=expenditure;
+    document.getElementsByClassName('total_inc')[0].innerHTML=income;
+    
+    document.getElementsByClassName('p-l')[0].innerHTML=income>expenditure ? "Profile" : "Loss";
+    
+    document.getElementsByClassName('deb-cred')[0].innerHTML=Math.abs(income-expenditure);
+    if(income>expenditure){
+        document.getElementsByClassName('deb-cred')[0].style.color='green';
+        document.getElementsByClassName('deb-cred')[0].style.fontWeight='800';
+        
+    }
+    else{
+        document.getElementsByClassName('deb-cred')[0].style.color='red';
+        document.getElementsByClassName('deb-cred')[0].style.fontWeight='800';
+    }
+    
+    
     function month(val){
 
 window.location.href="debit_credit.php?month="+val+"&year="+document.getElementById('year').value;
