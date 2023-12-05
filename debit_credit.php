@@ -108,9 +108,9 @@ for($i=0;$i<max(count($arr_inc),count($arr_exp));$i++){
   <table>
     <thead>
         <tr>
-          <th>Date</th>
-          <th>Debit Amount</th>
-          <th>Credit Amount</th>
+          <th data-content='Date'>Date</th>
+          <th data-content='Debit'>Debit Amount</th>
+          <th data-content='Credit'>Credit Amount</th>
         </tr>
     </thead>
     <tbody class="scroll-pane">
