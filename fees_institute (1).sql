@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2023 at 11:27 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.0.25
+-- Generation Time: Jan 07, 2024 at 01:31 PM
+-- Server version: 10.4.25-MariaDB
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,7 +36,7 @@ CREATE TABLE `expenditure` (
   `payment_purpose` varchar(255) NOT NULL,
   `paid_by` varchar(255) NOT NULL,
   `payment_month` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `expenditure`
@@ -57,7 +57,7 @@ CREATE TABLE `fees_history` (
   `subject_id` int(11) NOT NULL,
   `date` varchar(255) NOT NULL,
   `month` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `fees_history`
@@ -87,7 +87,15 @@ CREATE TABLE `income` (
   `payment_purpose` varchar(255) NOT NULL,
   `paid_by` varchar(255) NOT NULL,
   `payment_month` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `income`
+--
+
+INSERT INTO `income` (`income_id`, `payment_by`, `payment_phone`, `payment_date`, `payment_amt`, `payment_purpose`, `paid_by`, `payment_month`) VALUES
+(1, ' Wipro', ' 9907189895', '2023-11-11', 1000009, 'For Batch', 'Cash', '2023-11'),
+(2, ' Tcs', ' 9978255334', '2023-10-12', 10000, 'For Social Welfare', 'Cheque', '2023-10');
 
 -- --------------------------------------------------------
 
@@ -106,7 +114,7 @@ CREATE TABLE `student_activity` (
   `Month` varchar(20) NOT NULL,
   `Teacher_id` int(50) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `student_activity`
@@ -133,7 +141,10 @@ INSERT INTO `student_activity` (`Activity_id`, `Student_id`, `Category_id`, `Sub
 (18, 36, 11, 1, 18, 400, '2023-11-03', '2023-11', 38, 'Y'),
 (19, 47, 11, 1, 18, 400, '2023-11-05', 'November', 30, 'Y'),
 (20, 47, 11, 1, 20, 1000, '2023-11-05', 'November', 38, 'Y'),
-(21, 48, 11, 1, 18, 600, '2023-11-05', 'November', 30, 'Y');
+(21, 48, 11, 1, 18, 600, '2023-11-05', 'November', 30, 'Y'),
+(22, 50, 11, 1, 18, 1000, '2023-11-09', '', 37, 'Y'),
+(23, 51, 11, 1, 20, 645, '2023-11-12', '2023-11', 38, 'Y'),
+(24, 53, 11, 1, 18, 4567, '2023-12-21', '2023-12', 45, 'Y');
 
 -- --------------------------------------------------------
 
@@ -154,7 +165,7 @@ CREATE TABLE `student_registration` (
   `Class` varchar(50) NOT NULL,
   `Date_of_birth` date NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `student_registration`
@@ -183,7 +194,11 @@ INSERT INTO `student_registration` (`Student_id`, `Student_name`, `Student_reg_n
 (31, 'Kritika', 'SCH24', '9807654123', '', '', '', 'male', '2023-11-04', '1', '2023-11-04', 'Y'),
 (32, 'Arnab', 'SCH25', '8909876589', '', '', '', 'male', '2023-11-04', '1', '2023-11-04', 'Y'),
 (48, 'Raman Rajwat', 'STUD21', '7980340947', 'dumdum', '5676709807', '', 'male', '2023-11-05', '3rd-Year', '2023-10-31', 'Y'),
-(49, 'Rajarshi', 'STUD22', '9874561230', 'Baguiati', '9874561230', '', 'male', '2023-11-01', '2', '0000-00-00', 'Y');
+(49, 'Rajarshi', 'STUD22', '9874561230', 'Baguiati', '9874561230', '', 'male', '2023-11-01', '2', '0000-00-00', 'Y'),
+(50, 'Rohit Sharma', 'STUD24', '9807654123', 'Kolaghata', '8980154945', '', 'Male', '2023-11-08', '1st-Year', '2011-01-13', 'Y'),
+(51, 'Sumit', 'STUD25', '9807654123', 'Katak', '9830342864', '', 'Female', '2023-11-08', '12', '2023-10-18', 'Y'),
+(52, 'Subham Kumar', 'STUD26', '9807654123', 'Kolaghata', '983034286', '', 'Male', '2023-12-08', '1st-Year', '2009-12-28', 'Y'),
+(53, 'Suman Jha', 'STUD27', '8909876589', 'Katak', '5676709802', '', 'Female', '2023-12-08', '12', '2002-12-30', 'Y');
 
 -- --------------------------------------------------------
 
@@ -195,7 +210,7 @@ CREATE TABLE `subject_category` (
   `Category_id` int(11) NOT NULL,
   `Category_name` varchar(500) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `subject_category`
@@ -218,7 +233,7 @@ CREATE TABLE `subject_group` (
   `Subject_group_name` varchar(255) NOT NULL,
   `Category_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `subject_group`
@@ -245,7 +260,7 @@ CREATE TABLE `subject_master` (
   `Category_id` int(11) NOT NULL,
   `Subject_group_id` int(250) NOT NULL,
   `Status` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `subject_master`
@@ -276,7 +291,7 @@ CREATE TABLE `teacher` (
   `Teacher_reg_id` varchar(255) NOT NULL,
   `Category_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `teacher`
@@ -295,7 +310,8 @@ INSERT INTO `teacher` (`Teacher_id`, `Teacher_name`, `Teacher_phone`, `Teacher_r
 (35, 'kousik roy', '5423169087', '655', 11, 'Y'),
 (36, 'sanjiv ghosh', '8890723231', '84', 11, 'Y'),
 (37, 'Amar Roy', '987654321', '1', 11, 'Y'),
-(38, 'Kushal Ghosh', '9830342864', '101', 11, 'Y');
+(38, 'Kushal Ghosh', '9830342864', '101', 11, 'Y'),
+(45, 'Swapan Kom', '7890654123', 'TCH14', 11, 'Y');
 
 -- --------------------------------------------------------
 
@@ -310,7 +326,7 @@ CREATE TABLE `teacher_activity` (
   `Subject_group_id` int(11) NOT NULL,
   `Subject_id` int(11) NOT NULL,
   `Status` char(1) NOT NULL DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `teacher_activity`
@@ -326,7 +342,9 @@ INSERT INTO `teacher_activity` (`Teacher_activity_id`, `Teacher_id`, `Category_i
 (8, 38, 11, 1, 18, 'Y'),
 (9, 39, 11, 1, 20, 'Y'),
 (10, 40, 11, 1, 16, 'Y'),
-(11, 41, 11, 1, 20, 'Y');
+(11, 41, 11, 1, 20, 'Y'),
+(12, 45, 11, 1, 18, 'Y'),
+(13, 45, 11, 1, 16, 'Y');
 
 -- --------------------------------------------------------
 
@@ -343,7 +361,7 @@ CREATE TABLE `teacher_fees` (
   `date` date NOT NULL,
   `month` varchar(255) NOT NULL,
   `paid_by` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `teacher_fees`
@@ -368,6 +386,12 @@ ALTER TABLE `expenditure`
 --
 ALTER TABLE `fees_history`
   ADD PRIMARY KEY (`fees_id`);
+
+--
+-- Indexes for table `income`
+--
+ALTER TABLE `income`
+  ADD PRIMARY KEY (`income_id`);
 
 --
 -- Indexes for table `student_activity`
@@ -438,16 +462,22 @@ ALTER TABLE `fees_history`
   MODIFY `fees_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `income`
+--
+ALTER TABLE `income`
+  MODIFY `income_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `student_activity`
 --
 ALTER TABLE `student_activity`
-  MODIFY `Activity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `Activity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `student_registration`
 --
 ALTER TABLE `student_registration`
-  MODIFY `Student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `Student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `subject_category`
@@ -471,13 +501,13 @@ ALTER TABLE `subject_master`
 -- AUTO_INCREMENT for table `teacher`
 --
 ALTER TABLE `teacher`
-  MODIFY `Teacher_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `Teacher_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `teacher_activity`
 --
 ALTER TABLE `teacher_activity`
-  MODIFY `Teacher_activity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `Teacher_activity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `teacher_fees`
