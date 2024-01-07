@@ -59,18 +59,18 @@ else{
    </div>
 <div style="display:flex;justify-content:end;gap:10px">
 <select id="month"  onchange="month(this.value)">
-<option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1") echo "disabled"; ?>>January</option>
-<option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if(date("m")<"2") echo "disabled"; ?>>February</option>
-<option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if(date("m")<"3") echo "disabled"; ?>>March</option>
-<option value="04" <?php if($curr_month=="4") echo "selected"; ?>  <?php if(date("m")<"4") echo "disabled"; ?>>April</option>
-<option value="05" <?php if($curr_month=="5") echo "selected"; ?>  <?php if(date("m")<"5") echo "disabled"; ?>>May</option>
-<option value="06" <?php if($curr_month=="6") echo "selected"; ?>  <?php if(date("m")<"6") echo "disabled"; ?>>June</option>
-<option value="07" <?php if($curr_month=="7") echo "selected"; ?>  <?php if(date("m")<"7") echo "disabled"; ?>>July</option>
-<option value="08" <?php if($curr_month=="8") echo "selected"; ?>  <?php if(date("m")<"8") echo "disabled"; ?>>August</option>
-<option value="09" <?php if($curr_month=="9") echo "selected"; ?> <?php if(date("m")<"9") echo "disabled"; ?>>September</option>
-<option value="10" <?php if($curr_month=="10") echo "selected"; ?> <?php if(date("m")<"10") echo "disabled"; ?>>October</option>
-<option value="11" <?php if($curr_month=="11") echo "selected"; ?>  <?php if(date("m")<"11") echo "disabled"; ?>>November</option>
-<option value="12" <?php if($curr_month=="12") echo "selected"; ?> <?php if(date("m")<"12") echo "disabled"; ?>>December</option>
+<option value="01" <?php if($curr_month=="1") echo "selected"; ?>  <?php if(date("m")<"1" and date("Y")=== $curr_year ) echo "disabled"; ?>>January</option>
+<option value="02" <?php if($curr_month=="2") echo "selected"; ?>  <?php if(date("m")<"2" and date("Y")=== $curr_year ) echo "disabled"; ?>>February</option>
+<option value="03" <?php if($curr_month=="3") echo "selected"; ?>  <?php if(date("m")<"3" and date("Y")=== $curr_year ) echo "disabled"; ?>>March</option>
+<option value="04" <?php if($curr_month=="4") echo "selected"; ?>  <?php if(date("m")<"4" and date("Y")=== $curr_year ) echo "disabled"; ?>>April</option>
+<option value="05" <?php if($curr_month=="5") echo "selected"; ?>  <?php if(date("m")<"5" and date("Y")=== $curr_year ) echo "disabled"; ?>>May</option>
+<option value="06" <?php if($curr_month=="6") echo "selected"; ?>  <?php if(date("m")<"6" and date("Y")=== $curr_year ) echo "disabled"; ?>>June</option>
+<option value="07" <?php if($curr_month=="7") echo "selected"; ?>  <?php if(date("m")<"7" and date("Y")=== $curr_year ) echo "disabled"; ?>>July</option>
+<option value="08" <?php if($curr_month=="8") echo "selected"; ?>  <?php if(date("m")<"8" and date("Y")=== $curr_year ) echo "disabled"; ?>>August</option>
+<option value="09" <?php if($curr_month=="9") echo "selected"; ?> <?php if(date("m")<"9" and date("Y")=== $curr_year ) echo "disabled"; ?>>September</option>
+<option value="10" <?php if($curr_month=="10") echo "selected"; ?> <?php if(date("m")<"10" and date("Y")=== $curr_year ) echo "disabled"; ?>>October</option>
+<option value="11" <?php if($curr_month=="11") echo "selected"; ?>  <?php if(date("m")<"11" and date("Y")=== $curr_year ) echo "disabled"; ?>>November</option>
+<option value="12" <?php if($curr_month=="12") echo "selected"; ?> <?php if(date("m")<"12" and date("Y")=== $curr_year ) echo "disabled"; ?>>December</option>
 
 </select>
 <select id="year" onchange="year(this.value)">

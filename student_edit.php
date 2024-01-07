@@ -137,10 +137,10 @@ include("conn.php");
     </div>
     <div class="form-group">
       <label for="Gender">Gender</label>
-      <select class="form-control" name="Gender" id="Gender" >
+      <select class="form-control" name="Gender" id="Gender" value="<?php $data['Gender'] ?>">
 									<option value=""> </option>
-									<option value="male" <?php if($data['Gender']=="male") echo "selected" ?>>Male</option>
-									<option value="female" <?php if($data['Gender']=="female") echo "selected" ?>>Female</option>
+									<option value="Male" <?php if($data['Gender']=="Male") echo "selected" ?>>Male</option>
+									<option value="Female" <?php if($data['Gender']=="Female") echo "selected" ?>>Female</option>
 			</select>
     </div>
     <div class="form-group">  

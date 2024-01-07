@@ -28,7 +28,7 @@
     $ren=" SELECT * FROM  `subject_master` ORDER BY `Subject_id`";
     $quy=mysqli_query($conn,$ren);
 
-    if(!empty($_REQUEST['add']) && !empty($_REQUEST['mode'])){
+    if(!empty($_REQUEST['add']) ){
       $res_subjectgroupid=$_REQUEST['Subject_group_id']; 
       $res_subjectid = $_REQUEST['Subject_id']; 
       
@@ -143,7 +143,7 @@
 <body>
 <div class="form-box">
 <h1><a href="index.php"><i class="fa-solid fa-building-columns"></i></a></h1>
-  <h1>Teacher Registration Form</h1>
+  <h1>Teacher Activity Form</h1>
   
   <form action="" name="teacherform" id="teacherform" method="post" onSubmit="return checking();">
     <input type="hidden" name="mode" value="1" />
