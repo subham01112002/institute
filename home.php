@@ -83,6 +83,9 @@ if(mysqli_connect_errno()){
 		{
       let mob = document.getElementById('Phone_no').value;
       let  mobile = mob.trim();
+      let guardian = document.getElementById('Guardian_Phone').value;
+      let  guardianmobile = guardian.trim();
+
       
 				if(document.getElementById('Student_name').value=='')
 				{
@@ -103,9 +106,9 @@ if(mysqli_connect_errno()){
 					return false;
         }
         
-				if(document.getElementById('Guardian_Phone').value=='')
+				if(guardianmobile.length != 10)
 				{
-					alert('Please enter Guardian phone no!');
+					alert('Please enter valid Guardian phone no!');
 					document.subjectform.Guardian_Phone.focus();
 					return false;
 				}

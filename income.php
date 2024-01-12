@@ -182,7 +182,7 @@
   function search(){
     if(document.getElementById('payment_phone').value!="")
     {
-      window.location.href="expenditure.php?search=true&phone="+document.getElementById('payment_phone').value.trim();
+      window.location.href="income.php?search=true&phone="+document.getElementById('payment_phone').value.trim();
  
     }
   }
@@ -190,7 +190,7 @@
   function copy(){
     if(document.getElementById('payment_phone').value!="")
     {
-    window.location.href="expenditure.php?copy=true&phone="+document.getElementById('payment_phone').value.trim();
+    window.location.href="income.php?copy=true&phone="+document.getElementById('payment_phone').value.trim();
     }
   }
   </script>
