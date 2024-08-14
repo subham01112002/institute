@@ -22,7 +22,11 @@ if(isset($_REQUEST['mode'])){
 <div class="form-box">
   <h1><a href="index.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
   <h1>Student List</h1>
+  <div style="display:flex;justify-content:center;gap:10px"><a href="student_inact.php">Inactive-Student-List</a></div>
+    <div style="display:flex;justify-content:center;gap:10px"><a href="student_list.php">Active-Student-List</a></div>
+
   <div style="display:flex;justify-content:end;gap:10px">
+
   <form>
     <input type="hidden" name="mode" value="1">
     <input type="search" name="search" value="<?php if(isset($name)) echo $name; ?>" placeholder="Search By Name">
@@ -30,9 +34,9 @@ if(isset($_REQUEST['mode'])){
 
   </form>
    </div>
-<div id="DataTable">
+<div id="DataTable" >
   <div id="table_box_bootstrap"></div>
-  <table>
+  <table >
     <thead>
         <tr>
           <th>Name</th>
@@ -43,6 +47,7 @@ if(isset($_REQUEST['mode'])){
           <th>Email</th>
           <th>Gender</th>
           <th>Date of Joining</th>
+          <th>Subject-List</th>
           <th>Actions</th>
           
         </tr>
@@ -59,7 +64,8 @@ if(isset($_REQUEST['mode'])){
         <td><?php echo $arr['Email'] ?></td>
         <td><?php echo $arr['Gender'] ?></td>
         <td><?php echo $arr['Joining_date'] ?></td>
-        <td><a href="student_edit.php?stud=<?php echo $arr['Student_id'] ?>">Edit</a> | <a href="student_del.php?stud=<?php echo $arr['Student_id'] ?>">Delete</td>
+        <td ><div align="center"><a href="student_list_details.php?id=<?php echo $arr['Student_id'] ?>"><i class="fa-solid fa-clipboard-check" style="font-size:30px;margin: auto;"></i></a></div></td>
+        <td><a href="student_edit.php?stud=<?php echo $arr['Student_id'] ?>">Edit</a> | <a href="student_del.php?stud=<?php echo $arr['Student_id'] ?>&status=Y">Delete</a></td>
         </tr>
         <?php } ?>
         

@@ -13,7 +13,7 @@ include("conn.php");
         echo "failed to connect to mysql" . mysqli_connect_error();
     }
     $data=mysqli_fetch_array(mysqli_query($conn,"SELECT * FROM student_registration WHERE Student_id='$id'"));
-    if(!empty($_REQUEST['mode']))
+    if(!empty($_REQUEST['mode']) && !empty($_REQUEST['add']))
     {  
       $res_studentname = $_REQUEST['Student_name']; 
       $res_Studentregno = $_REQUEST['Student_reg_no'];
@@ -39,9 +39,38 @@ include("conn.php");
               `Date_of_birth`='$res_birthdate' WHERE Student_id='$id'";  
       $res=mysqli_query($conn, $sql_con);
      
-          @header("Location: student_list.php");
+          @header("Location:student_add_sub.php?id=$id");
           exit(); 		
-        
+    }  
+          if(!empty($_REQUEST['mode']) && !empty($_REQUEST['submit']))
+          {  
+            $res_studentname = $_REQUEST['Student_name']; 
+            $res_Studentregno = $_REQUEST['Student_reg_no'];
+            $res_Phoneno = $_REQUEST['Phone_no'];
+            $res_GuardianPhone = $_REQUEST['Guardian_Phone']; 
+            $res_Address = $_REQUEST['Address'];
+            $res_Emailid = $_REQUEST['Email'];
+            $res_Gender = $_REQUEST['Gender']; 
+            $res_Joiningdate = $_REQUEST['Joining_date'];
+            $res_Class = $_REQUEST['Class'];
+            $res_birthdate = $_REQUEST['Date_of_birth']; 
+            
+            $sql_con="UPDATE  `student_registration` SET 
+                    `Student_name`='$res_studentname' ,
+                    `Student_reg_no`= '$res_Studentregno', 
+                    `Phone_no`= '$res_Phoneno' , 
+                    `Guardian_Phone`='$res_GuardianPhone' ,
+                    `Address`= '$res_Address', 
+                    `Email`= '$res_Emailid' , 
+                    `Gender`='$res_Gender' ,
+                    `Joining_date`= '$res_Joiningdate', 
+                    `Class`= '$res_Class' , 
+                    `Date_of_birth`='$res_birthdate' WHERE Student_id='$id'";  
+            $res=mysqli_query($conn, $sql_con);
+           
+                @header("Location:student_list.php");
+                exit(); 		
+               
     }
     
 ?>
@@ -175,10 +204,10 @@ include("conn.php");
       <input class="form-control"  id="Date_of_birth" value="<?php echo $data['Date_of_birth']?>" type="date" name="Date_of_birth">
     </div>
     <div class="but">
-      <input class="btn btn-primary" type="button" value="Add Subject" onclick="window.location.href='student_add_sub.php?id=<?php echo $id ?>'" />
+      <input class="btn btn-primary" type="submit" value="Add Subject" name="add"  />
     </div>
     <div class="but">
-      <input class="btn btn-primary" type="submit" value="Submit" />
+      <input class="btn btn-primary" type="submit" value="Submit" name="submit"/>
     </div>
     
   </form>

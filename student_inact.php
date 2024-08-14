@@ -1,10 +1,11 @@
 <?php 
 include("conn.php");
-$id=$_REQUEST['id'];
-$sql=mysqli_query($conn,"SELECT `Subject_name`,`Joining_date`,`Actual_fees`,`Teacher_name`,`student_activity`.`Status`,`Activity_id` FROM `student_activity` INNER JOIN `teacher` ON  `teacher`.`Teacher_id` = `student_activity`.`Teacher_id` INNER JOIN `subject_master` ON `subject_master`.`Subject_id`=`student_activity`.`Subject_id`  WHERE `Student_id`='$id'");
+$sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='N' ORDER BY `Student_id` DESC");
 
-$name=mysqli_query($conn,"SELECT * FROM `student_registration` WHERE `Student_id`='$id'");
-$name_arr=mysqli_fetch_array($name);
+if(isset($_REQUEST['mode'])){
+    $name=$_REQUEST['search'];
+    $sql=mysqli_query($conn,"SELECT * FROM student_registration  WHERE Status='N' AND `Student_name` LIKE '%$name%' ORDER BY `Student_id` DESC");
+}
 
 ?>
 <!DOCTYPE html>
@@ -20,32 +21,50 @@ $name_arr=mysqli_fetch_array($name);
 <body>
 <div class="form-box">
   <h1><a href="student_list.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1><?php echo $name_arr['Student_name']; ?> </h1>
+  <h1>Inactive Student List</h1>
+  
+  <div style="display:flex;justify-content:center;gap:10px"><a href="student_inact.php">Inactive-Student-List</a></div>
+  <div style="display:flex;justify-content:center;gap:10px"><a href="student_list.php">Active-Student-List</a></div>
+  <div style="display:flex;justify-content:end;gap:10px">
+  <form>
+    <input type="hidden" name="mode" value="1">
+    <input type="search" name="search" value="<?php if(isset($name)) echo $name; ?>" placeholder="Search By Name">
+    <input type="submit">
 
-<div id="DataTable">
+  </form>
+   </div>
+<div id="DataTable" >
   <div id="table_box_bootstrap"></div>
-  <table>
+  <table >
     <thead>
         <tr>
-          <th>Subject</th>
-          <th>Joining Date</th>
-          <th>Fees</th>
-          <th>Teacher</th>
-          <th>Status</th>
+          <th>Name</th>
+          <th>Registration ID</th>
+          <th>Phone No.</th>
+          <th>Class</th>
+          <th>Address</th>
+          <th>Email</th>
+          <th>Gender</th>
+          <th>Date of Joining</th>
+          <th>Subject-List</th>
+          <th>Actions</th>
           
-            </tr>
+        </tr>
     </thead>
     <tbody class="scroll-pane">
         
         <?php  while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
-            <td><?php echo $arr['Subject_name'];  ?></td>
-            <td><?php echo $arr['Joining_date'];  ?></td>
-            <td><?php echo $arr['Actual_fees'];  ?></td>
-            <td><?php echo $arr['Teacher_name'];  ?></td>
-            <td><input type="checkbox" onclick="window.location.href='sub_status.php?id=<?php echo $arr['Activity_id'] ?>&status=<?php echo $arr['Status'] ?>'" <?php if($arr['Status']=='Y') echo "checked" ?>></td>
-            
-   
+        <td style="cursor:pointer" onclick="window.location.href='student_list_details.php?id=<?php echo $arr['Student_id'] ?>'"><?php echo $arr['Student_name'] ?></td>
+        <td><?php echo $arr['Student_reg_no'] ?></td>
+        <td><?php echo $arr['Phone_no'] ?></td>
+        <td><?php echo $arr['Class'] ?></td>
+        <td><?php echo $arr['Address'] ?></td>
+        <td><?php echo $arr['Email'] ?></td>
+        <td><?php echo $arr['Gender'] ?></td>
+        <td><?php echo $arr['Joining_date'] ?></td>
+        <td ><div align="center"><a href="student_list_details.php?id=<?php echo $arr['Student_id'] ?>"><i class="fa-solid fa-clipboard-check" style="font-size:30px;margin: auto;"></i></a></div></td>
+        <td><div align="center"><input type="checkbox" onclick="window.location.href='student_activate.php?id=<?php echo $arr['Student_id'] ?>&status=<?php echo $arr['Status'] ?>'" <?php if($arr['Status']=='Y') echo "checked" ?>></div></td>
         </tr>
         <?php } ?>
         

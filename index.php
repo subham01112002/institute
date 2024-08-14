@@ -61,6 +61,9 @@
         <a class="nav-link" href="fees_update.php">Fees Update</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="teacher_list.php">Teacher List</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="teacher.php">Teacher Registration</a>
       </li>
       <li class="nav-item">

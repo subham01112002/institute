@@ -1,9 +1,9 @@
 <?php 
 include("conn.php");
 $id=$_REQUEST['id'];
-$sql=mysqli_query($conn,"SELECT `Subject_name`,`Joining_date`,`Actual_fees`,`Teacher_name`,`student_activity`.`Status`,`Activity_id` FROM `student_activity` INNER JOIN `teacher` ON  `teacher`.`Teacher_id` = `student_activity`.`Teacher_id` INNER JOIN `subject_master` ON `subject_master`.`Subject_id`=`student_activity`.`Subject_id`  WHERE `Student_id`='$id'");
+$sql=mysqli_query($conn,"SELECT `Teacher_activity_id`,`Subject_name`,`teacher_activity`.`Status` FROM `teacher_activity` INNER JOIN `subject_master` ON `subject_master`.`Subject_id`=`teacher_activity`.`Subject_id`  WHERE `teacher_activity`.`Teacher_id`='$id'");
 
-$name=mysqli_query($conn,"SELECT * FROM `student_registration` WHERE `Student_id`='$id'");
+$name=mysqli_query($conn,"SELECT * FROM `teacher` WHERE `Teacher_id`='$id'");
 $name_arr=mysqli_fetch_array($name);
 
 ?>
@@ -19,8 +19,8 @@ $name_arr=mysqli_fetch_array($name);
 </head>
 <body>
 <div class="form-box">
-  <h1><a href="student_list.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
-  <h1><?php echo $name_arr['Student_name']; ?> </h1>
+  <h1><a href="teacher_list.php"><i class="fa-sharp fa-solid fa-id-card"></i></a></h1>
+  <h1><?php echo $name_arr['Teacher_name']; ?> </h1>
 
 <div id="DataTable">
   <div id="table_box_bootstrap"></div>
@@ -28,9 +28,9 @@ $name_arr=mysqli_fetch_array($name);
     <thead>
         <tr>
           <th>Subject</th>
-          <th>Joining Date</th>
-          <th>Fees</th>
-          <th>Teacher</th>
+          
+          
+          
           <th>Status</th>
           
             </tr>
@@ -39,11 +39,9 @@ $name_arr=mysqli_fetch_array($name);
         
         <?php  while($arr=mysqli_fetch_array($sql)){?> 
         <tr>
+        
             <td><?php echo $arr['Subject_name'];  ?></td>
-            <td><?php echo $arr['Joining_date'];  ?></td>
-            <td><?php echo $arr['Actual_fees'];  ?></td>
-            <td><?php echo $arr['Teacher_name'];  ?></td>
-            <td><input type="checkbox" onclick="window.location.href='sub_status.php?id=<?php echo $arr['Activity_id'] ?>&status=<?php echo $arr['Status'] ?>'" <?php if($arr['Status']=='Y') echo "checked" ?>></td>
+            <td><input type="checkbox" onclick="window.location.href='Teac_sub_status.php?tid=<?php echo $arr['Teacher_activity_id'] ?>&t_status=<?php echo $arr['Status'] ?>'" <?php if($arr['Status']=='Y') echo "checked" ?>></td>
             
    
         </tr>

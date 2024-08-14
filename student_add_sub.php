@@ -12,48 +12,12 @@ $id=$_REQUEST['id'];
     }
       
           $mspg =$data['Student_id'];
-          ;  
+           
           $name =$data['Student_name'];
-          ;
+        
           $join_date = $data['Joining_date'];
-          $d = date_parse_from_format("Y-m-d", $join_date);
-          
-          if($d["month"] ==1){
-            $date='Jannuary';
-          }
-          elseif($d["month"] ==2){
-            $date='February';
-          }
-          elseif($d["month"] ==3){
-            $date='March';
-          }
-          elseif($d["month"] ==4){
-            $date='April';
-          }
-          elseif($d["month"] ==5){
-            $date='May';
-          }
-          elseif($d["month"] ==6){
-            $date='June';
-          }
-          elseif($d["month"] ==7){
-            $date='July';
-          }
-          elseif($d["month"] ==8){
-            $date='August';
-          }
-          elseif($d["month"] ==9){
-            $date='September';
-          }
-          elseif($d["month"] ==10){
-            $date='October';
-          }
-          elseif($d["month"] ==11){
-            $date='November';
-          }
-          elseif($d["month"] ==12){
-            $date='December';
-          }
+
+          $Month =substr($join_date,0,7);        
           
           
     $req=" SELECT * FROM  `subject_category` ORDER BY `Category_id`";
@@ -106,12 +70,13 @@ $id=$_REQUEST['id'];
       $res=mysqli_query($conn, $sql_con);
       if($res)
         {
-          @header("Location: student_activity.php");
+          $_SESSION['id']=$id;
+          @header("Location: student_add_sub.php?id=$res_studentid");
 		      exit();   		
         }
     }
-
-    if(!empty($_REQUEST['mode']))
+    
+    if(!empty($_REQUEST['mode']) && !empty($_REQUEST['submit']))
     {  
       $res_studentid = $mspg; 
     
@@ -152,7 +117,7 @@ $id=$_REQUEST['id'];
           unset($_SESSION['id']);
           unset($_SESSION['name']);
           session_destroy();
-          @header("Location: index.php?msg=Successfull Insert");
+          @header("Location: student_list.php?msg=Successfull Insert");
 		      exit();   		
         }
     }
@@ -299,7 +264,7 @@ $id=$_REQUEST['id'];
   
     <div class="form-group">
       <label for="Month">Current Month</label>
-      <input class="form-control" id="Month" type="text" name="Month" value= "<?php echo $date ?>"/>
+      <input class="form-control" id="Month" type="text" name="Month" value= "<?php echo $Month ?>"/>
     </div>
       
     <input type="checkbox" name="Status" id="Status" value="Y" checked />Status
@@ -307,7 +272,7 @@ $id=$_REQUEST['id'];
       <input class="btn btn-primary" type="submit" name="add" value="+" /><br> 
     </div>
     <div class="but">
-        <input class="btn btn-primary" type="submit" value="Submit" /><br>
+        <input class="btn btn-primary" type="submit" name="submit" value="Submit" /><br>
     </div>
     
   </form>
