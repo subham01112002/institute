@@ -9,16 +9,18 @@ else{
     $curr_month=$_REQUEST['month'];
     $curr_year=$_REQUEST['year'];
 }
-$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'   GROUP BY `student_activity`.`Student_id`");
+$sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND ((`student_activity`.`Status`='Y') OR (`student_activity`.`Status`='N' and `end_date` > '$curr_year-$curr_month-31'))   GROUP BY `student_activity`.`Student_id`");
+/* $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '2024-08-31' AND `student_activity`.`Joining_date`<= '2024-08-31' AND ((`student_activity`.`Status`='Y') OR (`student_activity`.`Status`='N' and `end_date`> '2024-04-01')) AND `student_activity`.`Student_id`=28 GROUP BY `student_activity`.`Student_id`"); */
 
 if(isset($_REQUEST['mode'])){
     $name=$_REQUEST['search'];
-    $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y' AND `student_registration`.`Student_name` LIKE '%$name%'    GROUP BY `student_activity`.`Student_id`");
+    $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND ((`student_activity`.`Status`='Y') OR (`student_activity`.`Status`='N' and `end_date` > '$curr_year-$curr_month-31')) AND `student_registration`.`Student_name` LIKE '%$name%'    GROUP BY `student_activity`.`Student_id`");
 
 }
 if(isset($_REQUEST['search'])){
     $name=$_REQUEST['search'];
-    $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y' AND `student_registration`.`Student_name` LIKE '%$name%'    GROUP BY `student_activity`.`Student_id`");
+    
+    $sql=mysqli_query($conn,"SELECT `student_activity`.`Student_id` AS 'id',`Student_name`,`Student_reg_no`,SUM(`Actual_fees`) AS 'Fees' FROM `student_registration` INNER JOIN  `student_activity` ON `student_registration`.`Student_id`=`student_activity`.`Student_id` WHERE `student_registration`.`Joining_date` <= '$curr_year-$curr_month-31' AND `student_activity`.`Joining_date`<= '$curr_year-$curr_month-31' AND ((`student_activity`.`Status`='Y') OR (`student_activity`.`Status`='N' and `end_date` > '$curr_year-$curr_month-31'))  AND `student_registration`.`Student_name` LIKE '%$name%'    GROUP BY `student_activity`.`Student_id`");
 
 }
 if(isset($_REQUEST['show'])){
@@ -106,7 +108,7 @@ else{
                 $paid=0;
             $id=$arr['id'];
             
-            $subject_1=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'");
+            $subject_1=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND ((`student_activity`.`Status`='Y') OR (`student_activity`.`Status`='N' and `end_date` > '$curr_year-$curr_month-31'))");
             $query_1=mysqli_query($conn,"SELECT * FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'");
             $lat_date=mysqli_fetch_array(mysqli_query($conn,"SELECT MAX(date) AS 'date' FROM `fees_history` WHERE `student_id`='$id' AND `month` LIKE '$curr_year-$curr_month'"));
             if($lat_date)
@@ -136,7 +138,7 @@ else{
         <td  id="id-<?php echo $i ?>" data-id="<?php echo $arr['id']; ?>"><a href='fees_details.php?id=<?php echo $arr['id']; ?>' style="text-decoration:none;color:black"><?php echo $arr['Student_name'] ?></a></td>
         <td><?php echo $arr['Student_reg_no'] ?></td>
         <?php 
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'");
+        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND ((`student_activity`.`Status`='Y') OR (`student_activity`.`Status`='N' and `end_date` > '$curr_year-$curr_month-31'))");
         ?>
         
         <td>
@@ -147,7 +149,7 @@ else{
                 
         </td>
         <td><?php
-        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND `student_activity`.`Status`='Y'");
+        $subject=mysqli_query($conn,"SELECT * FROM `student_activity` INNER JOIN `subject_master` ON `student_activity`.`Subject_id`=`subject_master`.`Subject_id` WHERE `Student_id`='$id' AND `Joining_date`<= '$curr_year-$curr_month-31' AND ((`student_activity`.`Status`='Y') OR (`student_activity`.`Status`='N' and `end_date` > '$curr_year-$curr_month-31'))");
          ?>
          <input type="checkbox" class="fees_all-<?php echo $i ?>" onclick="select_all(<?php echo $i ?>)" value="<?php echo $arr['Fees'] ?>"> Select All <br> 
         <?php
