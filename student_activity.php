@@ -26,7 +26,7 @@
     $wer=" SELECT `Subject_id`,`Subject_name` FROM  `subject_master` ORDER BY `Subject_id`";
     $ter=mysqli_query($conn,$wer);
 
-    $rel=" SELECT * FROM  `teacher`  INNER JOIN `teacher_activity` ON `teacher`.`Teacher_id`=`teacher_activity`.`Teacher_id` and `status`='Y' ORDER BY `teacher`.`Teacher_id` ";
+    $rel=" SELECT * FROM  `teacher`  INNER JOIN `teacher_activity` ON `teacher`.`Teacher_id`=`teacher_activity`.`Teacher_id` and `teacher`.`status`='Y' ORDER BY `teacher`.`Teacher_id` ";
     $qup=mysqli_query($conn,$rel);
 
     if(!empty($_REQUEST['add']) && !empty($_REQUEST['mode'])){
